@@ -555,6 +555,9 @@ function createWasm() {
     
     updateMemoryViews();
 
+    wasmTable = wasmExports['__indirect_function_table'];
+    
+
     addOnInit(wasmExports['__wasm_call_ctors']);
 
     removeRunDependency('wasm-instantiate');
@@ -602,99 +605,110 @@ var tempI64;
 // === Body ===
 
 var ASM_CONSTS = {
-  563416: ($0) => { let ctx = Emval.toValue($0); ctx.canvas = null; },  
- 563468: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); ctx.lineWidth = 0; ctx.save(); },  
- 563547: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.lineWidth = 1; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter'; ctx.setLineDash([ 1, 1 ]); ctx.rect($1, $2, $3, $4); ctx.stroke(); ctx.restore(); },  
- 563739: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.rect($1, $2, $3, $4); ctx.stroke(); },  
- 563812: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.fillRect($1 - 0.5, $2 - 0.5, $3, $4); },  
- 563887: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); const col = `rgb(${$1} ${$2} ${$3})`; ctx.fillStyle = col; ctx.strokeStyle = col; },  
- 564002: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); const col = `rgb(${$1} ${$2} ${$3})`; ctx.fillStyle = col; ctx.strokeStyle = col; },  
- 564117: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.rect($1, $2, $3, $4); ctx.clip(); },  
- 564200: ($0) => { let ctx = Emval.toValue($0); ctx.save(); ctx.restore(); },  
- 564260: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
- 564308: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.lineWidth = $1; ctx.lineCap = UTF8ToString($2); ctx.lineJoin = UTF8ToString($3); ctx.setLineDash(new Float64Array(HEAPF64.buffer, $4, $5)); },  
- 564485: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.stroke(); },  
- 564589: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.stroke(); },  
- 564713: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1 - 2, $2 - 2); ctx.textAlign = 'left'; ctx.fillText(UTF8ToString($3, $4), 0, 0); ctx.restore(); },  
- 564870: ($0, $1, $2) => { let ctx = Emval.toValue($0); let metrics = ctx.measureText(UTF8ToString($1, $2)); return metrics.width; },  
- 564978: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1, $2 - 2.0); ctx.textAlign = 'left'; ctx.fillText(UTF8ToString($3, $4), 0, 0); ctx.restore(); },  
- 565133: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1, $2 - 2.0); ctx.rotate(-1 * $5 * Math.PI / 180); ctx.textAlign = 'left'; ctx.fillText(UTF8ToString($3, $4), 0, 0); ctx.restore(); },  
- 565325: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.transform($1, $2, $3, $4, $5, $6); },  
- 565397: ($0) => { let ctx = Emval.toValue($0); ctx.resetTransform(); },  
- 565452: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 565497: ($0, $1, $2, $3) => { let x = $1; let y = $2; let r = $3; let ctx = Emval.toValue($0); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke(); },  
- 565614: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
- 565662: ($0, $1, $2, $3) => { let x = $1; let y = $2; let r = $3; let ctx = Emval.toValue($0); ctx.arc(x, y, r, 0, 2 * Math.PI); },  
- 565765: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
- 565815: ($0, $1, $2, $3, $4, $5) => { let x = $1; let y = $2; let r = $3; let start = $4; let end = $5; let ctx = Emval.toValue($0); if (start > end) { ctx.arc(x, y, r, -start * Math.PI / 180, -end * Math.PI / 180); } else { ctx.arc(x, y, r, -start * Math.PI / 180, -end * Math.PI / 180, true); } },  
- 566078: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 566123: ($0, $1, $2, $3, $4, $5, $6) => { let x = $1; let y = $2; let w = $3; let h = $4; let a1 = $5; let a2 = $6; let ctx = Emval.toValue($0); ctx.translate(x + w / 2.0 - 0.5, y + h / 2.0 - 0.5); ctx.scale((w - 1) / 2.0, (h - 1) / 2.0); },  
- 566324: ($0, $1, $2, $3, $4, $5, $6) => { let x = $1; let y = $2; let w = $3; let h = $4; let a1 = $5; let a2 = $6; let ctx = Emval.toValue($0); ctx.scale(2.0 / (w - 1), 2.0 / (h - 1)); ctx.translate(-x - w / 2.0 + 0.5, -y - h / 2.0 + 0.5); },  
- 566527: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
- 566575: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 566620: ($0, $1, $2, $3, $4) => { let x = $1; let y = $2; let w = $3; let h = $4; let ctx = Emval.toValue($0); ctx.translate(x + w / 2.0 - 0.5, y + h / 2.0 - 0.5); ctx.scale(w / 2.0, h / 2.0); },  
- 566783: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
- 566831: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $2); ctx.stroke(); },  
- 566935: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $2); ctx.lineTo($3, $4); ctx.stroke(); },  
- 567059: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $4); ctx.stroke(); },  
- 567203: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($1, $3); ctx.stroke(); },  
- 567307: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($1, $3); ctx.lineTo($4, $3); ctx.stroke(); },  
- 567431: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($1, $3); ctx.lineTo($4, $3); ctx.lineTo($4, $5); ctx.stroke(); },  
- 567575: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 567620: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
- 567670: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 567715: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
- 567765: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 567810: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
- 567860: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
- 567905: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
- 567955: ($0, $1) => { let ctx = Emval.toValue($0); ctx.restore(); ctx.save(); ctx.scale($1, $1); ctx.translate(0.5, 0.5); },  
- 568059: ($0, $1) => { let ctx = Emval.toValue($0); ctx.scale($1, $1); },  
- 568111: ($0) => { let ctx = Emval.toValue($0); ctx.stroke(); ctx.restore(); },  
- 568173: ($0) => { let ctx = Emval.toValue($0); ctx.closePath(); ctx.stroke(); ctx.restore(); },  
- 568252: ($0) => { let ctx = Emval.toValue($0); ctx.closePath(); ctx.fill(); ctx.restore(); },  
- 568329: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.closePath(); ctx.stroke(); ctx.restore(); },  
- 568497: ($0, $1, $2, $3, $4, $5, $6, $7, $8) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.lineTo($7, $8); ctx.closePath(); ctx.stroke(); ctx.restore(); },  
- 568685: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.closePath(); ctx.fill(); ctx.restore(); },  
- 568851: ($0, $1, $2, $3, $4, $5, $6, $7, $8) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.lineTo($7, $8); ctx.closePath(); ctx.fill(); ctx.restore(); },  
- 569037: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); ctx.rect($1 - 0.5, $2 - 0.5, 1, 1); ctx.fill(); },  
- 569138: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); },  
- 569191: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.lineTo($1, $2); },  
- 569244: ($0, $1, $2, $3, $4, $5, $6, $7, $8, $9) => { let ctx = Emval.toValue($0); if ($1) { ctx.moveTo($2, $3); } else { ctx.lineTo($2, $3); } ctx.bezierCurveTo($4, $5, $6, $7, $8, $9); },  
- 569381: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); },  
- 569434: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); },  
- 569487: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.lineTo($1, $2); },  
- 569540: () => { let has_api = false; if ("queryLocalFonts" in window) { navigator.permissions.query({ name: "local-fonts" }).then((result) => { if (result.state === "granted" || result.state === "prompt") { has_api = true; }}); } return has_api; },  
- 569774: () => { let canvas = new OffscreenCanvas(100, 100); let ctx = canvas.getContext("2d"); ctx.lineWidth = 0; return Emval.toHandle(ctx); },  
- 569904: ($0, $1) => { let ctx = Emval.toValue($0); ctx.font = UTF8ToString($1); },  
- 569966: ($0, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) => { let ctx = Emval.toValue($0); let iw = $3; let ih = $4; let idata = new ImageData( new Uint8ClampedArray(HEAPU8.buffer.slice($1, $1 + $2)), iw, ih); let tmp = new OffscreenCanvas(iw, ih); tmp.getContext("2d").putImageData(idata, 0, 0); ctx.save(); ctx.beginPath(); ctx.rect($5, $6, $9, $10); ctx.clip(); ctx.drawImage(tmp, $7, $8, $9, $10, $5, $6, $9, $10); ctx.restore(); },  
- 570342: ($0, $1, $2, $3, $4, $5, $6, $7) => { let ctxt = Emval.toValue($0); let ctx = Emval.toValue($1); let cvs = ctx.canvas; ctxt.drawImage(cvs, $6, $7, $4, $5, $2, $3, $4, $5); },  
- 570480: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1, $2); ctx.save(); },  
- 570560: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); ctx.restore(); },  
- 570623: ($0, $1) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.style.zIndex = $1 ? 2 : 0; } },  
- 570723: ($0, $1) => { let div = document.getElementById("fltk_div" + $0); let canvas = document.getElementById("fltk_canvas" + $0); if (div && canvas) { div.style.zIndex = $1 ? 2 : 1; canvas.focus(); } },  
- 570907: ($0, $1, $2, $3, $4, $5, $6, $7, $8) => { let body = document.getElementsByTagName("body")[0]; let div = document.createElement("DIV"); div.id = "fltk_div" + $0; div.tabIndex = "-1"; div.addEventListener("contextmenu", (e) => e.preventDefault()); div.style.position = "absolute"; div.style.left = $2 + "px"; div.style.top = $1 ? ($3 - 30) + "px" : $3 + "px"; div.style.zIndex = $8 ? 2 : 1; div.style.backgroundColor = "#f1f1f1"; div.style.borderRight = "1px solid #555"; div.style.borderBottom = "1px solid #555"; div.style.textAlign = "center"; body.appendChild(div); let decor = document.createElement("DIV"); decor.id = "fltk_decor" + $0; decor.style.boxSizing = "border-box"; decor.style.height = "30px"; decor.style.font = "14px Arial"; decor.style.padding = "6px"; decor.style.cursor = "move"; decor.style.zIndex = 2; decor.style.backgroundColor = "#2196F3"; decor.style.color = "#fff"; decor.style.cursor = "pointer"; div.appendChild(decor); let header = document.createElement("DIV"); header.textContent = UTF8ToString($6); header.id = "fltk_decor_header" + $0; header.style.font = "14px Arial"; decor.appendChild(header); let close = document.createElement("BUTTON"); close.id = "closewin"; close.textContent = "X"; close.style.font = "bold 14px Arial"; close.style.position = "absolute"; close.style.zIndex = 4; close.style.top = "1%"; close.style.right = "1px"; close.style.backgroundColor = "#2196F3"; close.style.border = "none"; close.style.color = "#fff"; close.addEventListener("click", () => div.hidden = true); decor.appendChild(close); let canvas = document.createElement("CANVAS"); canvas.id = "fltk_canvas" + $0; canvas.setAttribute("data-raw-handle", $0.toString()); canvas.tabIndex = "-1"; canvas.width = $4; canvas.height = $5; canvas.style.display = "block"; div.appendChild(canvas); canvas.addEventListener("click", () => canvas.focus()); decor.addEventListener("mousedown", () => canvas.focus()); div.addEventListener( "focusin", () => { canvas.focus(); div.style.zIndex = $8 ? 2 : 1; }); div.addEventListener( "focusout", () => { canvas.blur(); div.style.zIndex = $8 ? 2 : 0; }); if ($1 === 0) decor.hidden = true; function addResizeHandle(name, dir, cursor) { let h = document.createElement("DIV"); h.className = "fltk_resize_handle"; h.style.position = "absolute"; h.style.zIndex = 3; h.style.cursor = cursor; h.style.touchAction = "none"; h.style.display = $7 ? "block" : "none"; if (name.includes("n")) h.style.top = "-3px"; if (name.includes("s")) h.style.bottom = "-3px"; if (name.includes("w")) h.style.left = "-3px"; if (name.includes("e")) h.style.right = "-3px"; if (name.length === 2) { h.style.width = "14px"; h.style.height = "14px"; } else if (name === "n" || name === "s") { h.style.left = "11px"; h.style.right = "11px"; h.style.height = "6px"; } else { h.style.top = "11px"; h.style.bottom = "11px"; h.style.width = "6px"; } h.addEventListener("pointerdown", (e) => { if (e.button !== 0) return; e.preventDefault(); e.stopPropagation(); if (!_fltk_em_resize_begin($0)) return; h.setPointerCapture(e.pointerId); let sx = e.clientX; let sy = e.clientY; let move = (ev) => { _fltk_em_resize_drag($0, dir, (ev.clientX - sx) | 0, (ev.clientY - sy) | 0); }; let up = (ev) => { h.removeEventListener("pointermove", move); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); try { h.releasePointerCapture(ev.pointerId); } catch (err) {} }; h.addEventListener("pointermove", move); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up); }); div.appendChild(h); } if (!$8) { addResizeHandle("nw", 5, "nwse-resize"); addResizeHandle("n", 4, "ns-resize"); addResizeHandle("ne", 6, "nesw-resize"); addResizeHandle("w", 1, "ew-resize"); addResizeHandle("e", 2, "ew-resize"); addResizeHandle("sw", 9, "nesw-resize"); addResizeHandle("s", 8, "ns-resize"); addResizeHandle("se", 10, "nwse-resize"); } function dragElement(elmnt) { var pos1 = 0; var pos2 = 0; var pos3 = 0; var pos4 = 0; if (document.getElementById("fltk_decor" + $0)) { document.getElementById("fltk_decor" + $0).onmousedown = dragMouseDown; } else { elmnt.onmousedown = dragMouseDown; } function dragMouseDown(e) { e = e || window.event; e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; document.onmouseup = closeDragElement; document.onmousemove = elementDrag; } function elementDrag(e) { e = e || window.event; e.preventDefault(); pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY; pos3 = e.clientX; pos4 = e.clientY; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; _fltk_em_track_div($0, elmnt.offsetLeft|0, elmnt.offsetTop|0); } function closeDragElement() { document.onmouseup = null; document.onmousemove = null; } } dragElement(document.getElementById("fltk_div" + $0)); },  
- 575660: ($0) => { let div = document.getElementById("fltk_div" + $0); div.hidden = false; },  
- 575736: ($0, $1) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.hidden = false; div.style.zIndex = $1 ? 2 : 1; } },  
- 575856: ($0) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.remove(); } },  
- 575939: ($0) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.hidden = true; } },  
- 576027: ($0) => { let canvas = document.getElementById("fltk_canvas" + $0); let ctx = canvas.getContext("2d"); return Emval.toHandle(ctx); },  
- 576152: ($0) => { let decor = document.getElementById("fltk_decor" + $0); decor.hidden = !decor.hidden; },  
- 576242: ($0, $1, $2, $3, $4, $5, $6) => { let X = $1; let Y = $2; let W = $3; let H = $4; let resized = $5; let canvas = document.getElementById("fltk_canvas" + $0); if (canvas && resized) { canvas.width = W; canvas.height = H; } let div = document.getElementById("fltk_div" + $0); if (div) { let decor = document.getElementById("fltk_decor" + $0); let off = (decor && !decor.hidden) ? $6 : 0; div.style.left = X + "px"; div.style.top = (Y - off) + "px"; } },  
- 576661: ($0, $1) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.querySelectorAll(".fltk_resize_handle") .forEach((h) => h.style.display = $1 ? "block" : "none"); } },  
- 576832: ($0) => { document.body.style.cursor = UTF8ToString($0); },  
- 576883: () => { return window.innerWidth; },  
- 576913: () => { return window.innerHeight; },  
- 576944: ($0, $1, $2) => { document.body.style.margin = $1 ? "0" : ""; document.body.style.overflow = $1 ? "auto" : ""; let div = document.getElementById("fltk_div" + $0); if (div) { div.style.borderRight = $1 ? "none" : "1px solid #555"; div.style.borderBottom = $1 ? "none" : "1px solid #555"; div.querySelectorAll(".fltk_resize_handle") .forEach((h) => h.style.display = $2 ? "block" : "none"); } },  
- 577321: () => { return window.innerWidth; },  
- 577351: () => { return window.innerHeight; },  
- 577382: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)).then( () => { }, () => { }, ); },  
- 577465: ($0, $1) => { let canvas = new OffscreenCanvas($0, $1); let ctx = canvas.getContext("2d"); ctx.lineWidth = 0; return Emval.toHandle(ctx); },  
- 577593: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.translate($1, $2); },  
- 577649: ($0) => { let ctx = Emval.toValue($0); ctx.setTransform(1, 0, 0, 1, 0, 0); },  
- 577718: () => { return (typeof navigator !== 'undefined' && navigator.gpu) ? 1 : 0; }
+  5258660: ($0) => { let ctx = Emval.toValue($0); ctx.canvas = null; },  
+ 5258712: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); ctx.lineWidth = 0; ctx.save(); },  
+ 5258791: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.lineWidth = 1; ctx.lineCap = 'butt'; ctx.lineJoin = 'miter'; ctx.setLineDash([ 1, 1 ]); ctx.rect($1, $2, $3, $4); ctx.stroke(); ctx.restore(); },  
+ 5258983: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.rect($1, $2, $3, $4); ctx.stroke(); },  
+ 5259056: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.fillRect($1 - 0.5, $2 - 0.5, $3, $4); },  
+ 5259131: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); const col = `rgb(${$1} ${$2} ${$3})`; ctx.fillStyle = col; ctx.strokeStyle = col; },  
+ 5259246: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); const col = `rgb(${$1} ${$2} ${$3})`; ctx.fillStyle = col; ctx.strokeStyle = col; },  
+ 5259361: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.rect($1, $2, $3, $4); ctx.clip(); },  
+ 5259444: ($0) => { let ctx = Emval.toValue($0); ctx.save(); ctx.restore(); },  
+ 5259504: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
+ 5259552: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.lineWidth = $1; ctx.lineCap = UTF8ToString($2); ctx.lineJoin = UTF8ToString($3); ctx.setLineDash(new Float64Array(HEAPF64.buffer, $4, $5)); },  
+ 5259729: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.stroke(); },  
+ 5259833: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.stroke(); },  
+ 5259957: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1 - 2, $2 - 2); ctx.textAlign = 'left'; ctx.fillText(UTF8ToString($3, $4), 0, 0); ctx.restore(); },  
+ 5260114: ($0, $1, $2) => { let ctx = Emval.toValue($0); let metrics = ctx.measureText(UTF8ToString($1, $2)); return metrics.width; },  
+ 5260222: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1, $2 - 2.0); ctx.textAlign = 'left'; ctx.fillText(UTF8ToString($3, $4), 0, 0); ctx.restore(); },  
+ 5260377: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1, $2 - 2.0); ctx.rotate(-1 * $5 * Math.PI / 180); ctx.textAlign = 'left'; ctx.fillText(UTF8ToString($3, $4), 0, 0); ctx.restore(); },  
+ 5260569: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.transform($1, $2, $3, $4, $5, $6); },  
+ 5260641: ($0) => { let ctx = Emval.toValue($0); ctx.resetTransform(); },  
+ 5260696: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5260741: ($0, $1, $2, $3) => { let x = $1; let y = $2; let r = $3; let ctx = Emval.toValue($0); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke(); },  
+ 5260858: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
+ 5260906: ($0, $1, $2, $3) => { let x = $1; let y = $2; let r = $3; let ctx = Emval.toValue($0); ctx.arc(x, y, r, 0, 2 * Math.PI); },  
+ 5261009: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
+ 5261059: ($0, $1, $2, $3, $4, $5) => { let x = $1; let y = $2; let r = $3; let start = $4; let end = $5; let ctx = Emval.toValue($0); if (start > end) { ctx.arc(x, y, r, -start * Math.PI / 180, -end * Math.PI / 180); } else { ctx.arc(x, y, r, -start * Math.PI / 180, -end * Math.PI / 180, true); } },  
+ 5261322: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5261367: ($0, $1, $2, $3, $4, $5, $6) => { let x = $1; let y = $2; let w = $3; let h = $4; let a1 = $5; let a2 = $6; let ctx = Emval.toValue($0); ctx.translate(x + w / 2.0 - 0.5, y + h / 2.0 - 0.5); ctx.scale((w - 1) / 2.0, (h - 1) / 2.0); },  
+ 5261568: ($0, $1, $2, $3, $4, $5, $6) => { let x = $1; let y = $2; let w = $3; let h = $4; let a1 = $5; let a2 = $6; let ctx = Emval.toValue($0); ctx.scale(2.0 / (w - 1), 2.0 / (h - 1)); ctx.translate(-x - w / 2.0 + 0.5, -y - h / 2.0 + 0.5); },  
+ 5261771: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
+ 5261819: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5261864: ($0, $1, $2, $3, $4) => { let x = $1; let y = $2; let w = $3; let h = $4; let ctx = Emval.toValue($0); ctx.translate(x + w / 2.0 - 0.5, y + h / 2.0 - 0.5); ctx.scale(w / 2.0, h / 2.0); },  
+ 5262027: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); },  
+ 5262075: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $2); ctx.stroke(); },  
+ 5262179: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $2); ctx.lineTo($3, $4); ctx.stroke(); },  
+ 5262303: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $4); ctx.stroke(); },  
+ 5262447: ($0, $1, $2, $3) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($1, $3); ctx.stroke(); },  
+ 5262551: ($0, $1, $2, $3, $4) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($1, $3); ctx.lineTo($4, $3); ctx.stroke(); },  
+ 5262675: ($0, $1, $2, $3, $4, $5) => { let ctx = Emval.toValue($0); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($1, $3); ctx.lineTo($4, $3); ctx.lineTo($4, $5); ctx.stroke(); },  
+ 5262819: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5262864: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
+ 5262914: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5262959: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
+ 5263009: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5263054: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
+ 5263104: ($0) => { let ctx = Emval.toValue($0); ctx.save(); },  
+ 5263149: ($0) => { let ctx = Emval.toValue($0); ctx.beginPath(); },  
+ 5263199: ($0, $1) => { let ctx = Emval.toValue($0); ctx.restore(); ctx.save(); ctx.scale($1, $1); ctx.translate(0.5, 0.5); },  
+ 5263303: ($0, $1) => { let ctx = Emval.toValue($0); ctx.scale($1, $1); },  
+ 5263355: ($0) => { let ctx = Emval.toValue($0); ctx.stroke(); ctx.restore(); },  
+ 5263417: ($0) => { let ctx = Emval.toValue($0); ctx.closePath(); ctx.stroke(); ctx.restore(); },  
+ 5263496: ($0) => { let ctx = Emval.toValue($0); ctx.closePath(); ctx.fill(); ctx.restore(); },  
+ 5263573: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.closePath(); ctx.stroke(); ctx.restore(); },  
+ 5263741: ($0, $1, $2, $3, $4, $5, $6, $7, $8) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.lineTo($7, $8); ctx.closePath(); ctx.stroke(); ctx.restore(); },  
+ 5263929: ($0, $1, $2, $3, $4, $5, $6) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.closePath(); ctx.fill(); ctx.restore(); },  
+ 5264095: ($0, $1, $2, $3, $4, $5, $6, $7, $8) => { let ctx = Emval.toValue($0); ctx.save(); ctx.beginPath(); ctx.moveTo($1, $2); ctx.lineTo($3, $4); ctx.lineTo($5, $6); ctx.lineTo($7, $8); ctx.closePath(); ctx.fill(); ctx.restore(); },  
+ 5264281: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); ctx.rect($1 - 0.5, $2 - 0.5, 1, 1); ctx.fill(); },  
+ 5264382: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); },  
+ 5264435: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.lineTo($1, $2); },  
+ 5264488: ($0, $1, $2, $3, $4, $5, $6, $7, $8, $9) => { let ctx = Emval.toValue($0); if ($1) { ctx.moveTo($2, $3); } else { ctx.lineTo($2, $3); } ctx.bezierCurveTo($4, $5, $6, $7, $8, $9); },  
+ 5264625: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); },  
+ 5264678: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.moveTo($1, $2); },  
+ 5264731: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.lineTo($1, $2); },  
+ 5264784: () => { let has_api = false; if ("queryLocalFonts" in window) { navigator.permissions.query({ name: "local-fonts" }).then((result) => { if (result.state === "granted" || result.state === "prompt") { has_api = true; }}); } return has_api; },  
+ 5265018: () => { let canvas = new OffscreenCanvas(100, 100); let ctx = canvas.getContext("2d"); ctx.lineWidth = 0; return Emval.toHandle(ctx); },  
+ 5265148: ($0, $1) => { let ctx = Emval.toValue($0); ctx.font = UTF8ToString($1); },  
+ 5265210: ($0, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10) => { let ctx = Emval.toValue($0); let iw = $3; let ih = $4; let idata = new ImageData( new Uint8ClampedArray(HEAPU8.buffer.slice($1, $1 + $2)), iw, ih); let tmp = new OffscreenCanvas(iw, ih); tmp.getContext("2d").putImageData(idata, 0, 0); ctx.save(); ctx.beginPath(); ctx.rect($5, $6, $9, $10); ctx.clip(); ctx.drawImage(tmp, $7, $8, $9, $10, $5, $6, $9, $10); ctx.restore(); },  
+ 5265586: ($0, $1, $2, $3, $4, $5, $6, $7) => { let ctxt = Emval.toValue($0); let ctx = Emval.toValue($1); let cvs = ctx.canvas; ctxt.drawImage(cvs, $6, $7, $4, $5, $2, $3, $4, $5); },  
+ 5265724: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.save(); ctx.translate($1, $2); ctx.save(); },  
+ 5265804: ($0) => { let ctx = Emval.toValue($0); ctx.restore(); ctx.restore(); },  
+ 5265867: ($0) => { let canvas = document.getElementById("fltk_canvas" + $0); if (canvas) canvas.focus(); },  
+ 5265957: ($0, $1, $2, $3, $4, $5, $6, $7, $8, $9) => { let body = document.getElementsByTagName("body")[0]; let host = $9 ? document.getElementById("fltk_content" + $9) : null; let div = document.createElement("DIV"); div.id = "fltk_div" + $0; div.tabIndex = "-1"; div.addEventListener("contextmenu", (e) => e.preventDefault()); div.style.position = "absolute"; div.style.left = $2 + "px"; div.style.top = host ? $3 + "px" : ($1 ? ($3 - 30) + "px" : $3 + "px"); div.style.zIndex = $8 ? 1: (window.fltkZ = (window.fltkZ || 10) + 1); div.style.outline = "none";; div.style.backgroundColor = "#f1f1f1"; div.style.borderRight = "1px solid #555"; div.style.borderBottom = "1px solid #555"; div.style.textAlign = "center"; (host || body).appendChild(div); let decor = document.createElement("DIV"); decor.id = "fltk_decor" + $0; decor.style.boxSizing = "border-box"; decor.style.height = "30px"; decor.style.font = "14px Arial"; decor.style.padding = "6px"; decor.style.cursor = "move"; decor.style.zIndex = 2; decor.style.backgroundColor = "#2196F3"; decor.style.color = "#fff"; decor.style.cursor = "pointer"; div.appendChild(decor); let header = document.createElement("DIV"); header.textContent = UTF8ToString($6); header.id = "fltk_decor_header" + $0; header.style.font = "14px Arial"; decor.appendChild(header); let close = document.createElement("BUTTON"); close.id = "closewin"; close.textContent = "X"; close.style.font = "bold 14px Arial"; close.style.position = "absolute"; close.style.zIndex = 4; close.style.top = "1%"; close.style.right = "1px"; close.style.backgroundColor = "#2196F3"; close.style.border = "none"; close.style.color = "#fff"; close.addEventListener("click", () => div.hidden = true); decor.appendChild(close); let content = document.createElement("DIV"); content.id = "fltk_content" + $0; content.style.position = "relative"; content.style.overflow = "hidden"; div.appendChild(content); let canvas = document.createElement("CANVAS"); canvas.id = "fltk_canvas" + $0; canvas.setAttribute("data-raw-handle", $0.toString()); canvas.tabIndex = "-1"; canvas.width = $4; canvas.height = $5; canvas.style.display = "block"; canvas.style.outline = "none"; content.appendChild(canvas); canvas.addEventListener("click", () => canvas.focus()); decor.addEventListener("mousedown", () => canvas.focus()); const own = (e) => e.target.closest('[id^="fltk_div"]') === div; div.addEventListener("focusin", (e) => { if (!$8) div.style.zIndex = (window.fltkZ = (window.fltkZ || 10) + 1); if (own(e)) canvas.focus(); }); div.addEventListener("focusout", (e) => { if (e.relatedTarget && div.contains(e.relatedTarget)) return; if (own(e)) canvas.blur(); }); if ($1 === 0) decor.hidden = true; function addResizeHandle(name, dir, cursor) { let h = document.createElement("DIV"); h.className = "fltk_resize_handle"; h.style.position = "absolute"; h.style.zIndex = 3; h.style.cursor = cursor; h.style.touchAction = "none"; h.style.display = $7 ? "block" : "none"; if (name.includes("n")) h.style.top = "-3px"; if (name.includes("s")) h.style.bottom = "-3px"; if (name.includes("w")) h.style.left = "-3px"; if (name.includes("e")) h.style.right = "-3px"; if (name.length === 2) { h.style.width = "14px"; h.style.height = "14px"; } else if (name === "n" || name === "s") { h.style.left = "11px"; h.style.right = "11px"; h.style.height = "6px"; } else { h.style.top = "11px"; h.style.bottom = "11px"; h.style.width = "6px"; } h.addEventListener("pointerdown", (e) => { if (e.button !== 0) return; e.preventDefault(); e.stopPropagation(); if (!_fltk_em_resize_begin($0)) return; h.setPointerCapture(e.pointerId); let sx = e.clientX; let sy = e.clientY; let move = (ev) => { _fltk_em_resize_drag($0, dir, (ev.clientX - sx) | 0, (ev.clientY - sy) | 0); }; let up = (ev) => { h.removeEventListener("pointermove", move); h.removeEventListener("pointerup", up); h.removeEventListener("pointercancel", up); try { h.releasePointerCapture(ev.pointerId); } catch (err) {} }; h.addEventListener("pointermove", move); h.addEventListener("pointerup", up); h.addEventListener("pointercancel", up); }); div.appendChild(h); } if (!$8) { addResizeHandle("nw", 5, "nwse-resize"); addResizeHandle("n", 4, "ns-resize"); addResizeHandle("ne", 6, "nesw-resize"); addResizeHandle("w", 1, "ew-resize"); addResizeHandle("e", 2, "ew-resize"); addResizeHandle("sw", 9, "nesw-resize"); addResizeHandle("s", 8, "ns-resize"); addResizeHandle("se", 10, "nwse-resize"); } function dragElement(elmnt) { var pos1 = 0; var pos2 = 0; var pos3 = 0; var pos4 = 0; if (document.getElementById("fltk_decor" + $0)) { document.getElementById("fltk_decor" + $0).onmousedown = dragMouseDown; } else { elmnt.onmousedown = dragMouseDown; } function dragMouseDown(e) { e = e || window.event; e.preventDefault(); pos3 = e.clientX; pos4 = e.clientY; document.onmouseup = closeDragElement; document.onmousemove = elementDrag; } function elementDrag(e) { e = e || window.event; e.preventDefault(); pos1 = pos3 - e.clientX; pos2 = pos4 - e.clientY; pos3 = e.clientX; pos4 = e.clientY; elmnt.style.left = (elmnt.offsetLeft - pos1) + "px"; elmnt.style.top = (elmnt.offsetTop - pos2) + "px"; _fltk_em_track_div($0, elmnt.offsetLeft|0, elmnt.offsetTop|0); } function closeDragElement() { document.onmouseup = null; document.onmousemove = null; } } dragElement(document.getElementById("fltk_div" + $0)); },  
+ 5271250: ($0) => { let div = document.getElementById("fltk_div" + $0); div.hidden = false; },  
+ 5271326: ($0) => { let div = document.getElementById("fltk_div" + $0); if (div) div.hidden = false; },  
+ 5271411: ($0) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.remove(); } },  
+ 5271494: ($0) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.hidden = true; } },  
+ 5271582: ($0) => { let canvas = document.getElementById("fltk_canvas" + $0); let ctx = canvas.getContext("2d"); return Emval.toHandle(ctx); },  
+ 5271707: ($0) => { let decor = document.getElementById("fltk_decor" + $0); decor.hidden = !decor.hidden; },  
+ 5271797: ($0, $1, $2, $3, $4, $5, $6) => { let X = $1; let Y = $2; let W = $3; let H = $4; let resized = $5; let canvas = document.getElementById("fltk_canvas" + $0); if (canvas && resized) { canvas.width = W; canvas.height = H; } let div = document.getElementById("fltk_div" + $0); if (div) { let nested = div.parentElement && div.parentElement.id.startsWith("fltk_content"); let decor = document.getElementById("fltk_decor" + $0); let off = (!nested && decor && !decor.hidden) ? $6 : 0; div.style.left = X + "px"; div.style.top = (Y - off) + "px"; } },  
+ 5272310: ($0, $1) => { let div = document.getElementById("fltk_div" + $0); if (div) { div.querySelectorAll(".fltk_resize_handle") .forEach((h) => h.style.display = $1 ? "block" : "none"); } },  
+ 5272481: ($0) => { document.body.style.cursor = UTF8ToString($0); },  
+ 5272532: ($0) => { let div = document.getElementById("fltk_div" + $0); if (div) div.style.zIndex = (window.fltkZ = (window.fltkZ || 10) + 1); },  
+ 5272659: () => { return window.innerWidth; },  
+ 5272689: () => { return window.innerHeight; },  
+ 5272720: ($0, $1, $2) => { document.body.style.margin = $1 ? "0" : ""; document.body.style.overflow = $1 ? "auto" : ""; let div = document.getElementById("fltk_div" + $0); if (div) { div.style.borderRight = $1 ? "none" : "1px solid #555"; div.style.borderBottom = $1 ? "none" : "1px solid #555"; div.querySelectorAll(".fltk_resize_handle") .forEach((h) => h.style.display = $2 ? "block" : "none"); } },  
+ 5273097: () => { return window.innerWidth; },  
+ 5273127: () => { return window.innerHeight; },  
+ 5273158: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)).then( () => { }, () => { }, ); },  
+ 5273241: ($0, $1) => { let canvas = new OffscreenCanvas($0, $1); let ctx = canvas.getContext("2d"); ctx.lineWidth = 0; return Emval.toHandle(ctx); },  
+ 5273369: ($0, $1, $2) => { let ctx = Emval.toValue($0); ctx.translate($1, $2); },  
+ 5273425: ($0) => { let ctx = Emval.toValue($0); ctx.setTransform(1, 0, 0, 1, 0, 0); },  
+ 5273494: () => { return (typeof navigator !== 'undefined' && navigator.gpu) ? 1 : 0; },  
+ 5273566: ($0, $1, $2, $3, $4) => { if (typeof window === 'undefined' || (window.AudioContext || window.webkitAudioContext) === undefined) { return 0; } if (typeof(window.miniaudio) === 'undefined') { window.miniaudio = { referenceCount: 0 }; window.miniaudio.device_type = {}; window.miniaudio.device_type.playback = $0; window.miniaudio.device_type.capture = $1; window.miniaudio.device_type.duplex = $2; window.miniaudio.device_state = {}; window.miniaudio.device_state.stopped = $3; window.miniaudio.device_state.started = $4; let miniaudio = window.miniaudio; miniaudio.devices = []; miniaudio.track_device = function(device) { for (var iDevice = 0; iDevice < miniaudio.devices.length; ++iDevice) { if (miniaudio.devices[iDevice] == null) { miniaudio.devices[iDevice] = device; return iDevice; } } miniaudio.devices.push(device); return miniaudio.devices.length - 1; }; miniaudio.untrack_device_by_index = function(deviceIndex) { miniaudio.devices[deviceIndex] = null; while (miniaudio.devices.length > 0) { if (miniaudio.devices[miniaudio.devices.length-1] == null) { miniaudio.devices.pop(); } else { break; } } }; miniaudio.untrack_device = function(device) { for (var iDevice = 0; iDevice < miniaudio.devices.length; ++iDevice) { if (miniaudio.devices[iDevice] == device) { return miniaudio.untrack_device_by_index(iDevice); } } }; miniaudio.get_device_by_index = function(deviceIndex) { return miniaudio.devices[deviceIndex]; }; miniaudio.unlock_event_types = (function(){ return ['touchend', 'click']; })(); miniaudio.unlock = function() { for(var i = 0; i < miniaudio.devices.length; ++i) { var device = miniaudio.devices[i]; if (device != null && device.webaudio != null && device.state === miniaudio.device_state.started) { device.webaudio.resume().then(() => { _ma_device__on_notification_unlocked(device.pDevice); }, (error) => {console.error("Failed to resume audiocontext", error); }); } } miniaudio.unlock_event_types.map(function(event_type) { document.removeEventListener(event_type, miniaudio.unlock, true); }); }; miniaudio.unlock_event_types.map(function(event_type) { document.addEventListener(event_type, miniaudio.unlock, true); }); } window.miniaudio.referenceCount += 1; return 1; },  
+ 5275744: () => { if (typeof(window.miniaudio) !== 'undefined') { window.miniaudio.unlock_event_types.map(function(event_type) { document.removeEventListener(event_type, window.miniaudio.unlock, true); }); window.miniaudio.referenceCount -= 1; if (window.miniaudio.referenceCount === 0) { delete window.miniaudio; } } },  
+ 5276048: () => { return (navigator.mediaDevices !== undefined && navigator.mediaDevices.getUserMedia !== undefined); },  
+ 5276152: () => { try { var temp = new (window.AudioContext || window.webkitAudioContext)(); var sampleRate = temp.sampleRate; temp.close(); return sampleRate; } catch(e) { return 0; } },  
+ 5276323: ($0, $1, $2, $3, $4, $5) => { var deviceType = $0; var channels = $1; var sampleRate = $2; var bufferSize = $3; var pIntermediaryBuffer = $4; var pDevice = $5; if (typeof(window.miniaudio) === 'undefined') { return -1; } var device = {}; var audioContextOptions = {}; if (deviceType == window.miniaudio.device_type.playback && sampleRate != 0) { audioContextOptions.sampleRate = sampleRate; } device.webaudio = new (window.AudioContext || window.webkitAudioContext)(audioContextOptions); device.webaudio.suspend(); device.state = window.miniaudio.device_state.stopped; var channelCountIn = 0; var channelCountOut = channels; if (deviceType != window.miniaudio.device_type.playback) { channelCountIn = channels; } device.scriptNode = device.webaudio.createScriptProcessor(bufferSize, channelCountIn, channelCountOut); device.scriptNode.onaudioprocess = function(e) { if (device.intermediaryBufferView == null || device.intermediaryBufferView.length == 0 || device.intermediaryBufferView.buffer !== HEAPF32.buffer) { device.intermediaryBufferView = new Float32Array(HEAPF32.buffer, Number(pIntermediaryBuffer), bufferSize * channels); } if (deviceType == window.miniaudio.device_type.capture || deviceType == window.miniaudio.device_type.duplex) { for (var iChannel = 0; iChannel < channels; iChannel += 1) { var inputBuffer = e.inputBuffer.getChannelData(iChannel); var intermediaryBuffer = device.intermediaryBufferView; for (var iFrame = 0; iFrame < bufferSize; iFrame += 1) { intermediaryBuffer[iFrame*channels + iChannel] = inputBuffer[iFrame]; } } _ma_device_process_pcm_frames_capture__webaudio(pDevice, bufferSize, pIntermediaryBuffer); } if (deviceType == window.miniaudio.device_type.playback || deviceType == window.miniaudio.device_type.duplex) { _ma_device_process_pcm_frames_playback__webaudio(pDevice, bufferSize, pIntermediaryBuffer); for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { var outputBuffer = e.outputBuffer.getChannelData(iChannel); var intermediaryBuffer = device.intermediaryBufferView; for (var iFrame = 0; iFrame < bufferSize; iFrame += 1) { outputBuffer[iFrame] = intermediaryBuffer[iFrame*channels + iChannel]; } } } else { for (var iChannel = 0; iChannel < e.outputBuffer.numberOfChannels; ++iChannel) { e.outputBuffer.getChannelData(iChannel).fill(0.0); } } }; if (deviceType == window.miniaudio.device_type.capture || deviceType == window.miniaudio.device_type.duplex) { navigator.mediaDevices.getUserMedia({audio:true, video:false}) .then(function(stream) { device.streamNode = device.webaudio.createMediaStreamSource(stream); device.streamNode.connect(device.scriptNode); device.scriptNode.connect(device.webaudio.destination); }) .catch(function(error) { console.log("Failed to get user media: " + error); }); } if (deviceType == window.miniaudio.device_type.playback) { device.scriptNode.connect(device.webaudio.destination); } device.pDevice = pDevice; return window.miniaudio.track_device(device); },  
+ 5279267: ($0) => { return window.miniaudio.get_device_by_index($0).webaudio.sampleRate; },  
+ 5279340: ($0) => { var device = window.miniaudio.get_device_by_index($0); if (device.scriptNode !== undefined) { device.scriptNode.onaudioprocess = function(e) {}; device.scriptNode.disconnect(); device.scriptNode = undefined; } if (device.streamNode !== undefined) { device.streamNode.disconnect(); device.streamNode = undefined; } device.webaudio.close(); device.webaudio = undefined; device.pDevice = undefined; },  
+ 5279740: ($0) => { window.miniaudio.untrack_device_by_index($0); },  
+ 5279790: ($0) => { var device = window.miniaudio.get_device_by_index($0); device.webaudio.resume(); device.state = window.miniaudio.device_state.started; },  
+ 5279929: ($0) => { var device = window.miniaudio.get_device_by_index($0); device.webaudio.suspend(); device.state = window.miniaudio.device_state.stopped; }
 };
 function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async () => { const itemList = await navigator.clipboard.read(); let imageType; const item = itemList.find(item => item.types.some(type => type.startsWith('image/'))); if (item) { const imageBlob = await item.getType(imageType = item.types.find(type => type.startsWith('image/'))); const imageBitmap = await createImageBitmap(imageBlob); const canvas = new OffscreenCanvas(imageBitmap.width, imageBitmap.height); const context = canvas.getContext('2d'); context.drawImage(imageBitmap, 0, 0); const imageData = context.getImageData(0, 0, canvas.width, canvas.height); return imageData; } else { return null; } }); }
+function __asyncjs__showChooser(type,filter,dir,preset) { return Asyncify.handleAsync(async () => { if (!window.showOpenFilePicker) { return null; } let multiple = false; let files = false; let save = false; if (type === 0 || type === 2 || type === 4) { files = true; } if (type === 2 || type === 3) { mutliple = true; } if (type > 3) { save = true; } let func; if (files) { if (save) { func = window.showSaveFilePicker; } else { func = window.showOpenFilePicker; } } else { func = window.showDirectoryPicker; } let dir1 = dir ? UTF8ToString(dir) : 'desktop'; let filt = UTF8ToString(filter).split(' '); const openPickerOpts = { types: [ { accept: { "application/x-abiword": filt, }, }, ], startIn: dir1, excludeAcceptAllOption: true, multiple: multiple, }; const savePickerOpts = { types: [ { accept: { "application/x-abiword": filt, }, }, ], suggestedName: UTF8ToString(preset), startIn: dir1, excludeAcceptAllOption: true, }; const directoryOpts = { mode: "readwrite", startIn: dir1, }; if (files) { return Emval.toHandle(func(save ? savePickerOpts : openPickerOpts)); } else { return Emval.toHandle(func(directoryOpts)); } }); }
 
 // end include: preamble.js
 
@@ -757,6 +771,81 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
   var stackRestore = (val) => __emscripten_stack_restore(val);
 
   var stackSave = () => _emscripten_stack_get_current();
+
+  var UTF8Decoder = typeof TextDecoder != 'undefined' ? new TextDecoder() : undefined;
+  
+    /**
+     * Given a pointer 'idx' to a null-terminated UTF8-encoded string in the given
+     * array that contains uint8 values, returns a copy of that string as a
+     * Javascript String object.
+     * heapOrArray is either a regular array, or a JavaScript typed array view.
+     * @param {number=} idx
+     * @param {number=} maxBytesToRead
+     * @return {string}
+     */
+  var UTF8ArrayToString = (heapOrArray, idx = 0, maxBytesToRead = NaN) => {
+      var endIdx = idx + maxBytesToRead;
+      var endPtr = idx;
+      // TextDecoder needs to know the byte length in advance, it doesn't stop on
+      // null terminator by itself.  Also, use the length info to avoid running tiny
+      // strings through TextDecoder, since .subarray() allocates garbage.
+      // (As a tiny code save trick, compare endPtr against endIdx using a negation,
+      // so that undefined/NaN means Infinity)
+      while (heapOrArray[endPtr] && !(endPtr >= endIdx)) ++endPtr;
+  
+      if (endPtr - idx > 16 && heapOrArray.buffer && UTF8Decoder) {
+        return UTF8Decoder.decode(heapOrArray.subarray(idx, endPtr));
+      }
+      var str = '';
+      // If building with TextDecoder, we have already computed the string length
+      // above, so test loop end condition against that
+      while (idx < endPtr) {
+        // For UTF8 byte structure, see:
+        // http://en.wikipedia.org/wiki/UTF-8#Description
+        // https://www.ietf.org/rfc/rfc2279.txt
+        // https://tools.ietf.org/html/rfc3629
+        var u0 = heapOrArray[idx++];
+        if (!(u0 & 0x80)) { str += String.fromCharCode(u0); continue; }
+        var u1 = heapOrArray[idx++] & 63;
+        if ((u0 & 0xE0) == 0xC0) { str += String.fromCharCode(((u0 & 31) << 6) | u1); continue; }
+        var u2 = heapOrArray[idx++] & 63;
+        if ((u0 & 0xF0) == 0xE0) {
+          u0 = ((u0 & 15) << 12) | (u1 << 6) | u2;
+        } else {
+          u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (heapOrArray[idx++] & 63);
+        }
+  
+        if (u0 < 0x10000) {
+          str += String.fromCharCode(u0);
+        } else {
+          var ch = u0 - 0x10000;
+          str += String.fromCharCode(0xD800 | (ch >> 10), 0xDC00 | (ch & 0x3FF));
+        }
+      }
+      return str;
+    };
+  
+    /**
+     * Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the
+     * emscripten HEAP, returns a copy of that string as a Javascript String object.
+     *
+     * @param {number} ptr
+     * @param {number=} maxBytesToRead - An optional length that specifies the
+     *   maximum number of bytes to read. You can omit this parameter to scan the
+     *   string until the first 0 byte. If maxBytesToRead is passed, and the string
+     *   at [ptr, ptr+maxBytesToReadr[ contains a null byte in the middle, then the
+     *   string will cut short at that byte index (i.e. maxBytesToRead will not
+     *   produce a string of exact length [ptr, ptr+maxBytesToRead[) N.B. mixing
+     *   frequent uses of UTF8ToString() with and without maxBytesToRead may throw
+     *   JS JIT optimizations off, so it is worth to consider consistently using one
+     * @return {string}
+     */
+  var UTF8ToString = (ptr, maxBytesToRead) => {
+      return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
+    };
+  var ___assert_fail = (condition, filename, line, func) => {
+      abort(`Assertion failed: ${UTF8ToString(condition)}, at: ` + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
+    };
 
   class ExceptionInfo {
       // excPtr - Thrown object pointer to wrap. Metadata pointer is calculated from it.
@@ -827,16 +916,6 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
       throw exceptionLast;
     };
 
-  /** @suppress {duplicate } */
-  function syscallGetVarargI() {
-      // the `+` prepended here is necessary to convince the JSCompiler that varargs is indeed a number.
-      var ret = HEAP32[((+SYSCALLS.varargs)>>2)];
-      SYSCALLS.varargs += 4;
-      return ret;
-    }
-  var syscallGetVarargP = syscallGetVarargI;
-  
-  
   var PATH = {
   isAbs:(path) => path.charAt(0) === '/',
   splitPath:(filename) => {
@@ -996,58 +1075,6 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
   };
   
   
-  var UTF8Decoder = typeof TextDecoder != 'undefined' ? new TextDecoder() : undefined;
-  
-    /**
-     * Given a pointer 'idx' to a null-terminated UTF8-encoded string in the given
-     * array that contains uint8 values, returns a copy of that string as a
-     * Javascript String object.
-     * heapOrArray is either a regular array, or a JavaScript typed array view.
-     * @param {number=} idx
-     * @param {number=} maxBytesToRead
-     * @return {string}
-     */
-  var UTF8ArrayToString = (heapOrArray, idx = 0, maxBytesToRead = NaN) => {
-      var endIdx = idx + maxBytesToRead;
-      var endPtr = idx;
-      // TextDecoder needs to know the byte length in advance, it doesn't stop on
-      // null terminator by itself.  Also, use the length info to avoid running tiny
-      // strings through TextDecoder, since .subarray() allocates garbage.
-      // (As a tiny code save trick, compare endPtr against endIdx using a negation,
-      // so that undefined/NaN means Infinity)
-      while (heapOrArray[endPtr] && !(endPtr >= endIdx)) ++endPtr;
-  
-      if (endPtr - idx > 16 && heapOrArray.buffer && UTF8Decoder) {
-        return UTF8Decoder.decode(heapOrArray.subarray(idx, endPtr));
-      }
-      var str = '';
-      // If building with TextDecoder, we have already computed the string length
-      // above, so test loop end condition against that
-      while (idx < endPtr) {
-        // For UTF8 byte structure, see:
-        // http://en.wikipedia.org/wiki/UTF-8#Description
-        // https://www.ietf.org/rfc/rfc2279.txt
-        // https://tools.ietf.org/html/rfc3629
-        var u0 = heapOrArray[idx++];
-        if (!(u0 & 0x80)) { str += String.fromCharCode(u0); continue; }
-        var u1 = heapOrArray[idx++] & 63;
-        if ((u0 & 0xE0) == 0xC0) { str += String.fromCharCode(((u0 & 31) << 6) | u1); continue; }
-        var u2 = heapOrArray[idx++] & 63;
-        if ((u0 & 0xF0) == 0xE0) {
-          u0 = ((u0 & 15) << 12) | (u1 << 6) | u2;
-        } else {
-          u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (heapOrArray[idx++] & 63);
-        }
-  
-        if (u0 < 0x10000) {
-          str += String.fromCharCode(u0);
-        } else {
-          var ch = u0 - 0x10000;
-          str += String.fromCharCode(0xD800 | (ch >> 10), 0xDC00 | (ch & 0x3FF));
-        }
-      }
-      return str;
-    };
   
   var FS_stdin_getChar_buffer = [];
   
@@ -3312,25 +3339,6 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
       },
   };
   
-  
-    /**
-     * Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the
-     * emscripten HEAP, returns a copy of that string as a Javascript String object.
-     *
-     * @param {number} ptr
-     * @param {number=} maxBytesToRead - An optional length that specifies the
-     *   maximum number of bytes to read. You can omit this parameter to scan the
-     *   string until the first 0 byte. If maxBytesToRead is passed, and the string
-     *   at [ptr, ptr+maxBytesToReadr[ contains a null byte in the middle, then the
-     *   string will cut short at that byte index (i.e. maxBytesToRead will not
-     *   produce a string of exact length [ptr, ptr+maxBytesToRead[) N.B. mixing
-     *   frequent uses of UTF8ToString() with and without maxBytesToRead may throw
-     *   JS JIT optimizations off, so it is worth to consider consistently using one
-     * @return {string}
-     */
-  var UTF8ToString = (ptr, maxBytesToRead) => {
-      return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
-    };
   var SYSCALLS = {
   DEFAULT_POLLMASK:5,
   calculateAt(dirfd, path, allowEmpty) {
@@ -3397,6 +3405,44 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
         return ret;
       },
   };
+  function ___syscall_faccessat(dirfd, path, amode, flags) {
+  try {
+  
+      path = SYSCALLS.getStr(path);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      if (amode & ~7) {
+        // need a valid mode
+        return -28;
+      }
+      var lookup = FS.lookupPath(path, { follow: true });
+      var node = lookup.node;
+      if (!node) {
+        return -44;
+      }
+      var perms = '';
+      if (amode & 4) perms += 'r';
+      if (amode & 2) perms += 'w';
+      if (amode & 1) perms += 'x';
+      if (perms /* otherwise, they've just passed F_OK */ && FS.nodePermissions(node, perms)) {
+        return -2;
+      }
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return -e.errno;
+  }
+  }
+
+  /** @suppress {duplicate } */
+  function syscallGetVarargI() {
+      // the `+` prepended here is necessary to convince the JSCompiler that varargs is indeed a number.
+      var ret = HEAP32[((+SYSCALLS.varargs)>>2)];
+      SYSCALLS.varargs += 4;
+      return ret;
+    }
+  var syscallGetVarargP = syscallGetVarargI;
+  
+  
   function ___syscall_fcntl64(fd, cmd, varargs) {
   SYSCALLS.varargs = varargs;
   try {
@@ -3452,6 +3498,25 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
     if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
     return -e.errno;
   }
+  }
+
+  var convertI32PairToI53Checked = (lo, hi) => {
+      return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
+    };
+  function ___syscall_ftruncate64(fd,length_low, length_high) {
+    var length = convertI32PairToI53Checked(length_low, length_high);
+  
+    
+  try {
+  
+      if (isNaN(length)) return 61;
+      FS.ftruncate(fd, length);
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return -e.errno;
+  }
+  ;
   }
 
   
@@ -3677,11 +3742,80 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
   }
   }
 
+  
+  
+  function ___syscall_readlinkat(dirfd, path, buf, bufsize) {
+  try {
+  
+      path = SYSCALLS.getStr(path);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      if (bufsize <= 0) return -28;
+      var ret = FS.readlink(path);
+  
+      var len = Math.min(bufsize, lengthBytesUTF8(ret));
+      var endChar = HEAP8[buf+len];
+      stringToUTF8(ret, buf, bufsize+1);
+      // readlink is one of the rare functions that write out a C string, but does never append a null to the output buffer(!)
+      // stringToUTF8() always appends a null byte, so restore the character under the null byte after the write.
+      HEAP8[buf+len] = endChar;
+      return len;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return -e.errno;
+  }
+  }
+
+  function ___syscall_renameat(olddirfd, oldpath, newdirfd, newpath) {
+  try {
+  
+      oldpath = SYSCALLS.getStr(oldpath);
+      newpath = SYSCALLS.getStr(newpath);
+      oldpath = SYSCALLS.calculateAt(olddirfd, oldpath);
+      newpath = SYSCALLS.calculateAt(newdirfd, newpath);
+      FS.rename(oldpath, newpath);
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return -e.errno;
+  }
+  }
+
+  function ___syscall_rmdir(path) {
+  try {
+  
+      path = SYSCALLS.getStr(path);
+      FS.rmdir(path);
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return -e.errno;
+  }
+  }
+
   function ___syscall_stat64(path, buf) {
   try {
   
       path = SYSCALLS.getStr(path);
       return SYSCALLS.doStat(FS.stat, path, buf);
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return -e.errno;
+  }
+  }
+
+  function ___syscall_unlinkat(dirfd, path, flags) {
+  try {
+  
+      path = SYSCALLS.getStr(path);
+      path = SYSCALLS.calculateAt(dirfd, path);
+      if (flags === 0) {
+        FS.unlink(path);
+      } else if (flags === 512) {
+        FS.rmdir(path);
+      } else {
+        abort('Invalid flags passed to unlinkat');
+      }
+      return 0;
     } catch (e) {
     if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
     return -e.errno;
@@ -4332,6 +4466,10 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
 
   var __emscripten_memcpy_js = (dest, src, num) => HEAPU8.copyWithin(dest, src, src + num);
 
+  var __emscripten_throw_longjmp = () => {
+      throw Infinity;
+    };
+
   
   
   
@@ -4836,14 +4974,124 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
       return Emval.toHandle(v);
     };
 
+  function __gmtime_js(time_low, time_high,tmPtr) {
+    var time = convertI32PairToI53Checked(time_low, time_high);
   
+    
+      var date = new Date(time * 1000);
+      HEAP32[((tmPtr)>>2)] = date.getUTCSeconds();
+      HEAP32[(((tmPtr)+(4))>>2)] = date.getUTCMinutes();
+      HEAP32[(((tmPtr)+(8))>>2)] = date.getUTCHours();
+      HEAP32[(((tmPtr)+(12))>>2)] = date.getUTCDate();
+      HEAP32[(((tmPtr)+(16))>>2)] = date.getUTCMonth();
+      HEAP32[(((tmPtr)+(20))>>2)] = date.getUTCFullYear()-1900;
+      HEAP32[(((tmPtr)+(24))>>2)] = date.getUTCDay();
+      var start = Date.UTC(date.getUTCFullYear(), 0, 1, 0, 0, 0, 0);
+      var yday = ((date.getTime() - start) / (1000 * 60 * 60 * 24))|0;
+      HEAP32[(((tmPtr)+(28))>>2)] = yday;
+    ;
+  }
+
+  var isLeapYear = (year) => year%4 === 0 && (year%100 !== 0 || year%400 === 0);
   
+  var MONTH_DAYS_LEAP_CUMULATIVE = [0,31,60,91,121,152,182,213,244,274,305,335];
   
+  var MONTH_DAYS_REGULAR_CUMULATIVE = [0,31,59,90,120,151,181,212,243,273,304,334];
+  var ydayFromDate = (date) => {
+      var leap = isLeapYear(date.getFullYear());
+      var monthDaysCumulative = (leap ? MONTH_DAYS_LEAP_CUMULATIVE : MONTH_DAYS_REGULAR_CUMULATIVE);
+      var yday = monthDaysCumulative[date.getMonth()] + date.getDate() - 1; // -1 since it's days since Jan 1
   
-  
-  var convertI32PairToI53Checked = (lo, hi) => {
-      return ((hi + 0x200000) >>> 0 < 0x400001 - !!lo) ? (lo >>> 0) + hi * 4294967296 : NaN;
+      return yday;
     };
+  
+  function __localtime_js(time_low, time_high,tmPtr) {
+    var time = convertI32PairToI53Checked(time_low, time_high);
+  
+    
+      var date = new Date(time*1000);
+      HEAP32[((tmPtr)>>2)] = date.getSeconds();
+      HEAP32[(((tmPtr)+(4))>>2)] = date.getMinutes();
+      HEAP32[(((tmPtr)+(8))>>2)] = date.getHours();
+      HEAP32[(((tmPtr)+(12))>>2)] = date.getDate();
+      HEAP32[(((tmPtr)+(16))>>2)] = date.getMonth();
+      HEAP32[(((tmPtr)+(20))>>2)] = date.getFullYear()-1900;
+      HEAP32[(((tmPtr)+(24))>>2)] = date.getDay();
+  
+      var yday = ydayFromDate(date)|0;
+      HEAP32[(((tmPtr)+(28))>>2)] = yday;
+      HEAP32[(((tmPtr)+(36))>>2)] = -(date.getTimezoneOffset() * 60);
+  
+      // Attention: DST is in December in South, and some regions don't have DST at all.
+      var start = new Date(date.getFullYear(), 0, 1);
+      var summerOffset = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
+      var winterOffset = start.getTimezoneOffset();
+      var dst = (summerOffset != winterOffset && date.getTimezoneOffset() == Math.min(winterOffset, summerOffset))|0;
+      HEAP32[(((tmPtr)+(32))>>2)] = dst;
+    ;
+  }
+
+  
+  /** @suppress {duplicate } */
+  var setTempRet0 = (val) => __emscripten_tempret_set(val);
+  var _setTempRet0 = setTempRet0;
+  
+  var __mktime_js = function(tmPtr) {
+  
+    var ret = (() => { 
+      var date = new Date(HEAP32[(((tmPtr)+(20))>>2)] + 1900,
+                          HEAP32[(((tmPtr)+(16))>>2)],
+                          HEAP32[(((tmPtr)+(12))>>2)],
+                          HEAP32[(((tmPtr)+(8))>>2)],
+                          HEAP32[(((tmPtr)+(4))>>2)],
+                          HEAP32[((tmPtr)>>2)],
+                          0);
+  
+      // There's an ambiguous hour when the time goes back; the tm_isdst field is
+      // used to disambiguate it.  Date() basically guesses, so we fix it up if it
+      // guessed wrong, or fill in tm_isdst with the guess if it's -1.
+      var dst = HEAP32[(((tmPtr)+(32))>>2)];
+      var guessedOffset = date.getTimezoneOffset();
+      var start = new Date(date.getFullYear(), 0, 1);
+      var summerOffset = new Date(date.getFullYear(), 6, 1).getTimezoneOffset();
+      var winterOffset = start.getTimezoneOffset();
+      var dstOffset = Math.min(winterOffset, summerOffset); // DST is in December in South
+      if (dst < 0) {
+        // Attention: some regions don't have DST at all.
+        HEAP32[(((tmPtr)+(32))>>2)] = Number(summerOffset != winterOffset && dstOffset == guessedOffset);
+      } else if ((dst > 0) != (dstOffset == guessedOffset)) {
+        var nonDstOffset = Math.max(winterOffset, summerOffset);
+        var trueOffset = dst > 0 ? dstOffset : nonDstOffset;
+        // Don't try setMinutes(date.getMinutes() + ...) -- it's messed up.
+        date.setTime(date.getTime() + (trueOffset - guessedOffset)*60000);
+      }
+  
+      HEAP32[(((tmPtr)+(24))>>2)] = date.getDay();
+      var yday = ydayFromDate(date)|0;
+      HEAP32[(((tmPtr)+(28))>>2)] = yday;
+      // To match expected behavior, update fields from date
+      HEAP32[((tmPtr)>>2)] = date.getSeconds();
+      HEAP32[(((tmPtr)+(4))>>2)] = date.getMinutes();
+      HEAP32[(((tmPtr)+(8))>>2)] = date.getHours();
+      HEAP32[(((tmPtr)+(12))>>2)] = date.getDate();
+      HEAP32[(((tmPtr)+(16))>>2)] = date.getMonth();
+      HEAP32[(((tmPtr)+(20))>>2)] = date.getYear();
+  
+      var timeMs = date.getTime();
+      if (isNaN(timeMs)) {
+        return -1;
+      }
+      // Return time in microseconds
+      return timeMs / 1000;
+     })();
+    return (setTempRet0((tempDouble = ret,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? (+(Math.floor((tempDouble)/4294967296.0)))>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)), ret>>>0);
+  };
+
+  
+  
+  
+  
+  
   function __mmap_js(len,prot,flags,fd,offset_low, offset_high,allocated,addr) {
     var offset = convertI32PairToI53Checked(offset_low, offset_high);
   
@@ -4972,16 +5220,18 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
 
   var _emscripten_date_now = () => Date.now();
 
-  var _emscripten_get_now = () => performance.now();
-
-  var _emscripten_has_asyncify = () => 1;
-
   var getHeapMax = () =>
       // Stay one Wasm page short of 4GB: while e.g. Chrome is able to allocate
       // full 4GB Wasm memories, the size will wrap back to 0 bytes in Wasm side
       // for any code that deals with heap sizes, which would require special
       // casing all heap size related code to treat 0 specially.
       2147483648;
+  var _emscripten_get_heap_max = () => getHeapMax();
+
+  var _emscripten_get_now = () => performance.now();
+
+  var _emscripten_has_asyncify = () => 1;
+
   
   
   var growMemory = (size) => {
@@ -7029,6 +7279,62 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
     };
 
   
+  var _emwgpuDeviceCreateBuffer = (devicePtr, descriptor, bufferPtr) => {
+      
+  
+      var mappedAtCreation = !!(HEAPU32[(((descriptor)+(32))>>2)]);
+  
+      var desc = {
+        "label": WebGPU.makeStringFromOptionalStringView(
+          descriptor + 4),
+        "usage": HEAPU32[(((descriptor)+(16))>>2)],
+        "size": readI53FromI64((descriptor)+(24)),
+        "mappedAtCreation": mappedAtCreation,
+      };
+  
+      var device = WebGPU.getJsObject(devicePtr);
+      var buffer;
+      try {
+        buffer = device.createBuffer(desc);
+      } catch (ex) {
+        // The only exception should be RangeError if mapping at creation ran out of memory.
+        
+        
+        return false;
+      }
+      WebGPU.Internals.jsObjectInsert(bufferPtr, buffer);
+      if (mappedAtCreation) {
+        WebGPU.Internals.bufferOnUnmaps[bufferPtr] = [];
+      }
+      return true;
+    };
+
+  
+  var _emwgpuDeviceCreateShaderModule = (devicePtr, descriptor, shaderModulePtr) => {
+      
+      var nextInChainPtr = HEAPU32[((descriptor)>>2)];
+      var sType = HEAP32[(((nextInChainPtr)+(4))>>2)];
+  
+      var desc = {
+        "label": WebGPU.makeStringFromOptionalStringView(
+          descriptor + 4),
+        "code": "",
+      };
+  
+      switch (sType) {
+        case 2: {
+          desc["code"] = WebGPU.makeStringFromStringView(
+            nextInChainPtr + 8
+          );
+          break;
+        }
+      }
+  
+      var device = WebGPU.getJsObject(devicePtr);
+      WebGPU.Internals.jsObjectInsert(shaderModulePtr, device.createShaderModule(desc));
+    };
+
+  
   var _emwgpuDeviceDestroy = (devicePtr) => {
       const device = WebGPU.getJsObject(devicePtr);
       // Remove the onuncapturederror handler which holds a pointer to the WGPUDevice.
@@ -7190,6 +7496,32 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
   }
   }
 
+  function _fd_fdstat_get(fd, pbuf) {
+  try {
+  
+      var rightsBase = 0;
+      var rightsInheriting = 0;
+      var flags = 0;
+      {
+        var stream = SYSCALLS.getStreamFromFD(fd);
+        // All character devices are terminals (other things a Linux system would
+        // assume is a character device, like the mouse, we have special APIs for).
+        var type = stream.tty ? 2 :
+                   FS.isDir(stream.mode) ? 3 :
+                   FS.isLink(stream.mode) ? 7 :
+                   4;
+      }
+      HEAP8[pbuf] = type;
+      HEAP16[(((pbuf)+(2))>>1)] = flags;
+      (tempI64 = [rightsBase>>>0,(tempDouble = rightsBase,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? (+(Math.floor((tempDouble)/4294967296.0)))>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)], HEAP32[(((pbuf)+(8))>>2)] = tempI64[0],HEAP32[(((pbuf)+(12))>>2)] = tempI64[1]);
+      (tempI64 = [rightsInheriting>>>0,(tempDouble = rightsInheriting,(+(Math.abs(tempDouble))) >= 1.0 ? (tempDouble > 0.0 ? (+(Math.floor((tempDouble)/4294967296.0)))>>>0 : (~~((+(Math.ceil((tempDouble - +(((~~(tempDouble)))>>>0))/4294967296.0)))))>>>0) : 0)], HEAP32[(((pbuf)+(16))>>2)] = tempI64[0],HEAP32[(((pbuf)+(20))>>2)] = tempI64[1]);
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return e.errno;
+  }
+  }
+
   /** @param {number=} offset */
   var doReadv = (stream, iov, iovcnt, offset) => {
       var ret = 0;
@@ -7218,6 +7550,46 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
       if (isNaN(offset)) return 61;
       var stream = SYSCALLS.getStreamFromFD(fd)
       var num = doReadv(stream, iov, iovcnt, offset);
+      HEAPU32[((pnum)>>2)] = num;
+      return 0;
+    } catch (e) {
+    if (typeof FS == 'undefined' || !(e.name === 'ErrnoError')) throw e;
+    return e.errno;
+  }
+  ;
+  }
+
+  /** @param {number=} offset */
+  var doWritev = (stream, iov, iovcnt, offset) => {
+      var ret = 0;
+      for (var i = 0; i < iovcnt; i++) {
+        var ptr = HEAPU32[((iov)>>2)];
+        var len = HEAPU32[(((iov)+(4))>>2)];
+        iov += 8;
+        var curr = FS.write(stream, HEAP8, ptr, len, offset);
+        if (curr < 0) return -1;
+        ret += curr;
+        if (curr < len) {
+          // No more space to write.
+          break;
+        }
+        if (typeof offset != 'undefined') {
+          offset += curr;
+        }
+      }
+      return ret;
+    };
+  
+  
+  function _fd_pwrite(fd,iov,iovcnt,offset_low, offset_high,pnum) {
+    var offset = convertI32PairToI53Checked(offset_low, offset_high);
+  
+    
+  try {
+  
+      if (isNaN(offset)) return 61;
+      var stream = SYSCALLS.getStreamFromFD(fd)
+      var num = doWritev(stream, iov, iovcnt, offset);
       HEAPU32[((pnum)>>2)] = num;
       return 0;
     } catch (e) {
@@ -7261,26 +7633,6 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
   ;
   }
 
-  /** @param {number=} offset */
-  var doWritev = (stream, iov, iovcnt, offset) => {
-      var ret = 0;
-      for (var i = 0; i < iovcnt; i++) {
-        var ptr = HEAPU32[((iov)>>2)];
-        var len = HEAPU32[(((iov)+(4))>>2)];
-        iov += 8;
-        var curr = FS.write(stream, HEAP8, ptr, len, offset);
-        if (curr < 0) return -1;
-        ret += curr;
-        if (curr < len) {
-          // No more space to write.
-          break;
-        }
-        if (typeof offset != 'undefined') {
-          offset += curr;
-        }
-      }
-      return ret;
-    };
   
   function _fd_write(fd, iov, iovcnt, pnum) {
   try {
@@ -7294,6 +7646,11 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
     return e.errno;
   }
   }
+
+  var _getentropy = (buffer, size) => {
+      randomFill(HEAPU8.subarray(buffer, buffer + size));
+      return 0;
+    };
 
   
   
@@ -7398,6 +7755,169 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
 
   
   
+  var _wgpuDeviceCreateBindGroup = (devicePtr, descriptor) => {
+      
+  
+      function makeEntry(entryPtr) {
+        
+  
+        var bufferPtr = HEAPU32[(((entryPtr)+(8))>>2)];
+        var samplerPtr = HEAPU32[(((entryPtr)+(32))>>2)];
+        var textureViewPtr = HEAPU32[(((entryPtr)+(36))>>2)];
+        var externalTexturePtr = 0;
+        WebGPU.iterateExtensions(entryPtr, {
+          14: (ptr) => {
+            externalTexturePtr = HEAPU32[(((ptr)+(8))>>2)];
+          },
+        });
+  
+        var resource;
+        if (bufferPtr) {
+          // Note the sentinel UINT64_MAX will be read as -1.
+          var size = readI53FromI64((entryPtr)+(24));
+          if (size == -1) size = undefined;
+  
+          resource = {
+            "buffer": WebGPU.getJsObject(bufferPtr),
+            "offset": readI53FromI64((entryPtr)+(16)),
+            "size": size,
+          };
+        } else {
+          resource = WebGPU.getJsObject(samplerPtr || textureViewPtr || externalTexturePtr);
+        }
+        return {
+          "binding": HEAPU32[(((entryPtr)+(4))>>2)],
+          "resource": resource,
+        };
+      }
+  
+      function makeEntries(count, entriesPtrs) {
+        var entries = [];
+        for (var i = 0; i < count; ++i) {
+          entries.push(makeEntry(entriesPtrs +
+              40 * i));
+        }
+        return entries;
+      }
+  
+      var desc = {
+        "label": WebGPU.makeStringFromOptionalStringView(
+          descriptor + 4),
+        "layout": WebGPU.getJsObject(
+          HEAPU32[(((descriptor)+(12))>>2)]),
+        "entries": makeEntries(
+          HEAPU32[(((descriptor)+(16))>>2)],
+          HEAPU32[(((descriptor)+(20))>>2)]
+        ),
+      };
+  
+      var device = WebGPU.getJsObject(devicePtr);
+      var ptr = _emwgpuCreateBindGroup(0);
+      WebGPU.Internals.jsObjectInsert(ptr, device.createBindGroup(desc));
+      return ptr;
+    };
+
+  
+  
+  var _wgpuDeviceCreateBindGroupLayout = (devicePtr, descriptor) => {
+      
+  
+      function makeBufferEntry(substructPtr) {
+        var typeInt =
+          HEAPU32[(((substructPtr)+(4))>>2)];
+        if (!typeInt) return undefined;
+  
+        return {
+          "type": WebGPU.BufferBindingType[typeInt],
+          "hasDynamicOffset":
+            !!(HEAPU32[(((substructPtr)+(8))>>2)]),
+          "minBindingSize":
+            readI53FromI64((substructPtr)+(16)),
+        };
+      }
+  
+      function makeSamplerEntry(substructPtr) {
+        var typeInt =
+          HEAPU32[(((substructPtr)+(4))>>2)];
+        if (!typeInt) return undefined;
+  
+        return {
+          "type": WebGPU.SamplerBindingType[typeInt],
+        };
+      }
+  
+      function makeTextureEntry(substructPtr) {
+        var sampleTypeInt =
+          HEAPU32[(((substructPtr)+(4))>>2)];
+        if (!sampleTypeInt) return undefined;
+  
+        return {
+          "sampleType": WebGPU.TextureSampleType[sampleTypeInt],
+          "viewDimension": WebGPU.TextureViewDimension[HEAP32[(((substructPtr)+(8))>>2)]],
+          "multisampled":
+            !!(HEAPU32[(((substructPtr)+(12))>>2)]),
+        };
+      }
+  
+      function makeStorageTextureEntry(substructPtr) {
+        var accessInt =
+          HEAPU32[(((substructPtr)+(4))>>2)]
+        if (!accessInt) return undefined;
+  
+        return {
+          "access": WebGPU.StorageTextureAccess[accessInt],
+          "format": WebGPU.TextureFormat[HEAP32[(((substructPtr)+(8))>>2)]],
+          "viewDimension": WebGPU.TextureViewDimension[HEAP32[(((substructPtr)+(12))>>2)]],
+        };
+      }
+  
+      function makeEntry(entryPtr) {
+        
+  
+        var entry = {
+          "binding":
+            HEAPU32[(((entryPtr)+(4))>>2)],
+          "visibility":
+            HEAPU32[(((entryPtr)+(8))>>2)],
+          "buffer": makeBufferEntry(entryPtr + 24),
+          "sampler": makeSamplerEntry(entryPtr + 48),
+          "texture": makeTextureEntry(entryPtr + 56),
+          "storageTexture": makeStorageTextureEntry(entryPtr + 72),
+        };
+        WebGPU.iterateExtensions(entryPtr, {
+          13: (ptr) => {
+            entry["externalTexture"] = {};
+          },
+        });
+        return entry;
+      }
+  
+      function makeEntries(count, entriesPtrs) {
+        var entries = [];
+        for (var i = 0; i < count; ++i) {
+          entries.push(makeEntry(entriesPtrs +
+              88 * i));
+        }
+        return entries;
+      }
+  
+      var desc = {
+        "label": WebGPU.makeStringFromOptionalStringView(
+          descriptor + 4),
+        "entries": makeEntries(
+          HEAPU32[(((descriptor)+(12))>>2)],
+          HEAPU32[(((descriptor)+(16))>>2)]
+        ),
+      };
+  
+      var device = WebGPU.getJsObject(devicePtr);
+      var ptr = _emwgpuCreateBindGroupLayout(0);
+      WebGPU.Internals.jsObjectInsert(ptr, device.createBindGroupLayout(desc));
+      return ptr;
+    };
+
+  
+  
   var _wgpuDeviceCreateCommandEncoder = (devicePtr, descriptor) => {
       var desc;
       if (descriptor) {
@@ -7410,6 +7930,40 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
       var device = WebGPU.getJsObject(devicePtr);
       var ptr = _emwgpuCreateCommandEncoder(0);
       WebGPU.Internals.jsObjectInsert(ptr, device.createCommandEncoder(desc));
+      return ptr;
+    };
+
+  
+  
+  var _wgpuDeviceCreatePipelineLayout = (devicePtr, descriptor) => {
+      
+      var bglCount = HEAPU32[(((descriptor)+(12))>>2)];
+      var bglPtr = HEAPU32[(((descriptor)+(16))>>2)];
+      var bgls = [];
+      for (var i = 0; i < bglCount; ++i) {
+        bgls.push(WebGPU.getJsObject(
+          HEAPU32[(((bglPtr)+(4 * i))>>2)]));
+      }
+      var desc = {
+        "label": WebGPU.makeStringFromOptionalStringView(
+          descriptor + 4),
+        "bindGroupLayouts": bgls,
+        "immediateSize": HEAPU32[(((descriptor)+(20))>>2)],
+      };
+  
+      var device = WebGPU.getJsObject(devicePtr);
+      var ptr = _emwgpuCreatePipelineLayout(0);
+      WebGPU.Internals.jsObjectInsert(ptr, device.createPipelineLayout(desc));
+      return ptr;
+    };
+
+  
+  
+  var _wgpuDeviceCreateRenderPipeline = (devicePtr, descriptor) => {
+      var desc = WebGPU.makeRenderPipelineDesc(descriptor);
+      var device = WebGPU.getJsObject(devicePtr);
+      var ptr = _emwgpuCreateRenderPipeline(0);
+      WebGPU.Internals.jsObjectInsert(ptr, device.createRenderPipeline(desc));
       return ptr;
     };
 
@@ -7780,9 +8334,92 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
     };
 
   
+  
+  function _wgpuQueueWriteBuffer(queuePtr,bufferPtr,bufferOffset_low, bufferOffset_high,data,size) {
+    var bufferOffset = convertI32PairToI53Checked(bufferOffset_low, bufferOffset_high);
+  
+    
+      var queue = WebGPU.getJsObject(queuePtr);
+      var buffer = WebGPU.getJsObject(bufferPtr);
+      // There is a size limitation for ArrayBufferView. Work around by passing in a subarray
+      // instead of the whole heap. crbug.com/1201109
+      var subarray = HEAPU8.subarray(data, data + size);
+      queue.writeBuffer(buffer, bufferOffset, subarray, 0, size);
+    ;
+  }
+
+  
+  var _wgpuRenderPassEncoderDrawIndexed = (passPtr, indexCount, instanceCount, firstIndex, baseVertex, firstInstance) => {
+      
+      
+      firstIndex >>>= 0;
+      firstInstance >>>= 0;
+      var pass = WebGPU.getJsObject(passPtr);
+      pass.drawIndexed(indexCount, instanceCount, firstIndex, baseVertex, firstInstance);
+    };
+
+  
   var _wgpuRenderPassEncoderEnd = (encoderPtr) => {
       var encoder = WebGPU.getJsObject(encoderPtr);
       encoder.end();
+    };
+
+  
+  var _wgpuRenderPassEncoderSetBindGroup = (passPtr, groupIndex, groupPtr, dynamicOffsetCount, dynamicOffsetsPtr) => {
+      
+      var pass = WebGPU.getJsObject(passPtr);
+      var group = WebGPU.getJsObject(groupPtr);
+      if (dynamicOffsetCount == 0) {
+        pass.setBindGroup(groupIndex, group);
+      } else {
+        pass.setBindGroup(groupIndex, group, HEAPU32, ((dynamicOffsetsPtr)>>2), dynamicOffsetCount);
+      }
+    };
+
+  
+  
+  function _wgpuRenderPassEncoderSetIndexBuffer(passPtr,bufferPtr,format,offset_low, offset_high,size_low, size_high) {
+    var offset = convertI32PairToI53Checked(offset_low, offset_high);
+    var size = convertI32PairToI53Checked(size_low, size_high);
+  
+    
+      var pass = WebGPU.getJsObject(passPtr);
+      var buffer = WebGPU.getJsObject(bufferPtr);
+      if (size == -1) size = undefined;
+      pass.setIndexBuffer(buffer, WebGPU.IndexFormat[format], offset, size);
+    ;
+  }
+
+  
+  var _wgpuRenderPassEncoderSetPipeline = (passPtr, pipelinePtr) => {
+      var pass = WebGPU.getJsObject(passPtr);
+      var pipeline = WebGPU.getJsObject(pipelinePtr);
+      pass.setPipeline(pipeline);
+    };
+
+  
+  
+  function _wgpuRenderPassEncoderSetVertexBuffer(passPtr,slot,bufferPtr,offset_low, offset_high,size_low, size_high) {
+    var offset = convertI32PairToI53Checked(offset_low, offset_high);
+    var size = convertI32PairToI53Checked(size_low, size_high);
+  
+    
+      
+      var pass = WebGPU.getJsObject(passPtr);
+      var buffer = WebGPU.getJsObject(bufferPtr);
+      if (size == -1) size = undefined;
+      pass.setVertexBuffer(slot, buffer, offset, size);
+    ;
+  }
+
+  
+  
+  var _wgpuRenderPipelineGetBindGroupLayout = (pipelinePtr, groupIndex) => {
+      
+      var pipeline = WebGPU.getJsObject(pipelinePtr);
+      var ptr = _emwgpuCreateBindGroupLayout(0);
+      WebGPU.Internals.jsObjectInsert(ptr, pipeline.getBindGroupLayout(groupIndex));
+      return ptr;
     };
 
   
@@ -7908,6 +8545,19 @@ function __asyncjs__get_clipboard_image() { return Asyncify.handleAsync(async ()
 
 
 
+  var wasmTableMirror = [];
+  
+  /** @type {WebAssembly.Table} */
+  var wasmTable;
+  var getWasmTableEntry = (funcPtr) => {
+      var func = wasmTableMirror[funcPtr];
+      if (!func) {
+        if (funcPtr >= wasmTableMirror.length) wasmTableMirror.length = funcPtr + 1;
+        wasmTableMirror[funcPtr] = func = wasmTable.get(funcPtr);
+      }
+      return func;
+    };
+
 
   FS.createPreloadedFile = FS_createPreloadedFile;
   FS.staticInit();
@@ -7932,13 +8582,21 @@ init_emval();;
       var preloadedAudios = {};;
 var wasmImports = {
   /** @export */
+  __assert_fail: ___assert_fail,
+  /** @export */
   __asyncjs__get_clipboard_image,
   /** @export */
+  __asyncjs__showChooser,
+  /** @export */
   __cxa_throw: ___cxa_throw,
+  /** @export */
+  __syscall_faccessat: ___syscall_faccessat,
   /** @export */
   __syscall_fcntl64: ___syscall_fcntl64,
   /** @export */
   __syscall_fstat64: ___syscall_fstat64,
+  /** @export */
+  __syscall_ftruncate64: ___syscall_ftruncate64,
   /** @export */
   __syscall_getcwd: ___syscall_getcwd,
   /** @export */
@@ -7954,7 +8612,15 @@ var wasmImports = {
   /** @export */
   __syscall_openat: ___syscall_openat,
   /** @export */
+  __syscall_readlinkat: ___syscall_readlinkat,
+  /** @export */
+  __syscall_renameat: ___syscall_renameat,
+  /** @export */
+  __syscall_rmdir: ___syscall_rmdir,
+  /** @export */
   __syscall_stat64: ___syscall_stat64,
+  /** @export */
+  __syscall_unlinkat: ___syscall_unlinkat,
   /** @export */
   _abort_js: __abort_js,
   /** @export */
@@ -7980,6 +8646,8 @@ var wasmImports = {
   /** @export */
   _emscripten_memcpy_js: __emscripten_memcpy_js,
   /** @export */
+  _emscripten_throw_longjmp: __emscripten_throw_longjmp,
+  /** @export */
   _emval_as: __emval_as,
   /** @export */
   _emval_await: __emval_await,
@@ -8002,6 +8670,12 @@ var wasmImports = {
   /** @export */
   _emval_take_value: __emval_take_value,
   /** @export */
+  _gmtime_js: __gmtime_js,
+  /** @export */
+  _localtime_js: __localtime_js,
+  /** @export */
+  _mktime_js: __mktime_js,
+  /** @export */
   _mmap_js: __mmap_js,
   /** @export */
   _munmap_js: __munmap_js,
@@ -8015,6 +8689,8 @@ var wasmImports = {
   emscripten_asm_const_ptr: _emscripten_asm_const_ptr,
   /** @export */
   emscripten_date_now: _emscripten_date_now,
+  /** @export */
+  emscripten_get_heap_max: _emscripten_get_heap_max,
   /** @export */
   emscripten_get_now: _emscripten_get_now,
   /** @export */
@@ -8052,6 +8728,10 @@ var wasmImports = {
   /** @export */
   emwgpuDelete: _emwgpuDelete,
   /** @export */
+  emwgpuDeviceCreateBuffer: _emwgpuDeviceCreateBuffer,
+  /** @export */
+  emwgpuDeviceCreateShaderModule: _emwgpuDeviceCreateShaderModule,
+  /** @export */
   emwgpuDeviceDestroy: _emwgpuDeviceDestroy,
   /** @export */
   emwgpuGetPreferredFormat: _emwgpuGetPreferredFormat,
@@ -8066,7 +8746,11 @@ var wasmImports = {
   /** @export */
   fd_close: _fd_close,
   /** @export */
+  fd_fdstat_get: _fd_fdstat_get,
+  /** @export */
   fd_pread: _fd_pread,
+  /** @export */
+  fd_pwrite: _fd_pwrite,
   /** @export */
   fd_read: _fd_read,
   /** @export */
@@ -8074,11 +8758,45 @@ var wasmImports = {
   /** @export */
   fd_write: _fd_write,
   /** @export */
+  getentropy: _getentropy,
+  /** @export */
+  invoke_ii,
+  /** @export */
+  invoke_iii,
+  /** @export */
+  invoke_iiii,
+  /** @export */
+  invoke_iiiii,
+  /** @export */
+  invoke_iiiiiii,
+  /** @export */
+  invoke_iiiiiiiiii,
+  /** @export */
+  invoke_v,
+  /** @export */
+  invoke_vi,
+  /** @export */
+  invoke_vii,
+  /** @export */
+  invoke_viii,
+  /** @export */
+  invoke_viiii,
+  /** @export */
+  invoke_viiiiiiiii,
+  /** @export */
   wgpuCommandEncoderBeginRenderPass: _wgpuCommandEncoderBeginRenderPass,
   /** @export */
   wgpuCommandEncoderFinish: _wgpuCommandEncoderFinish,
   /** @export */
+  wgpuDeviceCreateBindGroup: _wgpuDeviceCreateBindGroup,
+  /** @export */
+  wgpuDeviceCreateBindGroupLayout: _wgpuDeviceCreateBindGroupLayout,
+  /** @export */
   wgpuDeviceCreateCommandEncoder: _wgpuDeviceCreateCommandEncoder,
+  /** @export */
+  wgpuDeviceCreatePipelineLayout: _wgpuDeviceCreatePipelineLayout,
+  /** @export */
+  wgpuDeviceCreateRenderPipeline: _wgpuDeviceCreateRenderPipeline,
   /** @export */
   wgpuDeviceCreateTexture: _wgpuDeviceCreateTexture,
   /** @export */
@@ -8086,7 +8804,21 @@ var wasmImports = {
   /** @export */
   wgpuQueueSubmit: _wgpuQueueSubmit,
   /** @export */
+  wgpuQueueWriteBuffer: _wgpuQueueWriteBuffer,
+  /** @export */
+  wgpuRenderPassEncoderDrawIndexed: _wgpuRenderPassEncoderDrawIndexed,
+  /** @export */
   wgpuRenderPassEncoderEnd: _wgpuRenderPassEncoderEnd,
+  /** @export */
+  wgpuRenderPassEncoderSetBindGroup: _wgpuRenderPassEncoderSetBindGroup,
+  /** @export */
+  wgpuRenderPassEncoderSetIndexBuffer: _wgpuRenderPassEncoderSetIndexBuffer,
+  /** @export */
+  wgpuRenderPassEncoderSetPipeline: _wgpuRenderPassEncoderSetPipeline,
+  /** @export */
+  wgpuRenderPassEncoderSetVertexBuffer: _wgpuRenderPassEncoderSetVertexBuffer,
+  /** @export */
+  wgpuRenderPipelineGetBindGroupLayout: _wgpuRenderPipelineGetBindGroupLayout,
   /** @export */
   wgpuSurfaceConfigure: _wgpuSurfaceConfigure,
   /** @export */
@@ -8190,22 +8922,198 @@ var dynCall_iiiiiiiii = Module['dynCall_iiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a
 var dynCall_iiiii = Module['dynCall_iiiii'] = (a0, a1, a2, a3, a4) => (dynCall_iiiii = Module['dynCall_iiiii'] = wasmExports['dynCall_iiiii'])(a0, a1, a2, a3, a4);
 var dynCall_did = Module['dynCall_did'] = (a0, a1, a2) => (dynCall_did = Module['dynCall_did'] = wasmExports['dynCall_did'])(a0, a1, a2);
 var dynCall_viiiidd = Module['dynCall_viiiidd'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viiiidd = Module['dynCall_viiiidd'] = wasmExports['dynCall_viiiidd'])(a0, a1, a2, a3, a4, a5, a6);
+var dynCall_ji = Module['dynCall_ji'] = (a0, a1) => (dynCall_ji = Module['dynCall_ji'] = wasmExports['dynCall_ji'])(a0, a1);
+var dynCall_iiji = Module['dynCall_iiji'] = (a0, a1, a2, a3, a4) => (dynCall_iiji = Module['dynCall_iiji'] = wasmExports['dynCall_iiji'])(a0, a1, a2, a3, a4);
+var dynCall_i = Module['dynCall_i'] = (a0) => (dynCall_i = Module['dynCall_i'] = wasmExports['dynCall_i'])(a0);
+var dynCall_iiij = Module['dynCall_iiij'] = (a0, a1, a2, a3, a4) => (dynCall_iiij = Module['dynCall_iiij'] = wasmExports['dynCall_iiij'])(a0, a1, a2, a3, a4);
+var dynCall_diid = Module['dynCall_diid'] = (a0, a1, a2, a3) => (dynCall_diid = Module['dynCall_diid'] = wasmExports['dynCall_diid'])(a0, a1, a2, a3);
+var dynCall_jiji = Module['dynCall_jiji'] = (a0, a1, a2, a3, a4) => (dynCall_jiji = Module['dynCall_jiji'] = wasmExports['dynCall_jiji'])(a0, a1, a2, a3, a4);
+var dynCall_iiiji = Module['dynCall_iiiji'] = (a0, a1, a2, a3, a4, a5) => (dynCall_iiiji = Module['dynCall_iiiji'] = wasmExports['dynCall_iiiji'])(a0, a1, a2, a3, a4, a5);
+var dynCall_iiijjji = Module['dynCall_iiijjji'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_iiijjji = Module['dynCall_iiijjji'] = wasmExports['dynCall_iiijjji'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+var dynCall_jiiij = Module['dynCall_jiiij'] = (a0, a1, a2, a3, a4, a5) => (dynCall_jiiij = Module['dynCall_jiiij'] = wasmExports['dynCall_jiiij'])(a0, a1, a2, a3, a4, a5);
+var dynCall_iiiiij = Module['dynCall_iiiiij'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iiiiij = Module['dynCall_iiiiij'] = wasmExports['dynCall_iiiiij'])(a0, a1, a2, a3, a4, a5, a6);
+var dynCall_iiiiiij = Module['dynCall_iiiiiij'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiiiiij = Module['dynCall_iiiiiij'] = wasmExports['dynCall_iiiiiij'])(a0, a1, a2, a3, a4, a5, a6, a7);
+var dynCall_jiiji = Module['dynCall_jiiji'] = (a0, a1, a2, a3, a4, a5) => (dynCall_jiiji = Module['dynCall_jiiji'] = wasmExports['dynCall_jiiji'])(a0, a1, a2, a3, a4, a5);
+var dynCall_ijii = Module['dynCall_ijii'] = (a0, a1, a2, a3, a4) => (dynCall_ijii = Module['dynCall_ijii'] = wasmExports['dynCall_ijii'])(a0, a1, a2, a3, a4);
+var dynCall_fiiiiiiiiffii = Module['dynCall_fiiiiiiiiffii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12) => (dynCall_fiiiiiiiiffii = Module['dynCall_fiiiiiiiiffii'] = wasmExports['dynCall_fiiiiiiiiffii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+var dynCall_viiif = Module['dynCall_viiif'] = (a0, a1, a2, a3, a4) => (dynCall_viiif = Module['dynCall_viiif'] = wasmExports['dynCall_viiif'])(a0, a1, a2, a3, a4);
+var dynCall_viiiif = Module['dynCall_viiiif'] = (a0, a1, a2, a3, a4, a5) => (dynCall_viiiif = Module['dynCall_viiiif'] = wasmExports['dynCall_viiiif'])(a0, a1, a2, a3, a4, a5);
+var dynCall_viiiiiiifi = Module['dynCall_viiiiiiifi'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_viiiiiiifi = Module['dynCall_viiiiiiifi'] = wasmExports['dynCall_viiiiiiifi'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+var dynCall_viiiiiiff = Module['dynCall_viiiiiiff'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_viiiiiiff = Module['dynCall_viiiiiiff'] = wasmExports['dynCall_viiiiiiff'])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+var dynCall_viiiiiifi = Module['dynCall_viiiiiifi'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_viiiiiifi = Module['dynCall_viiiiiifi'] = wasmExports['dynCall_viiiiiifi'])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+var dynCall_iiiiiiii = Module['dynCall_iiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiiiiiii = Module['dynCall_iiiiiiii'] = wasmExports['dynCall_iiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7);
+var dynCall_viiiifii = Module['dynCall_viiiifii'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiiifii = Module['dynCall_viiiifii'] = wasmExports['dynCall_viiiifii'])(a0, a1, a2, a3, a4, a5, a6, a7);
+var dynCall_viiiffi = Module['dynCall_viiiffi'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viiiffi = Module['dynCall_viiiffi'] = wasmExports['dynCall_viiiffi'])(a0, a1, a2, a3, a4, a5, a6);
+var dynCall_viiiiij = Module['dynCall_viiiiij'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiiiij = Module['dynCall_viiiiij'] = wasmExports['dynCall_viiiiij'])(a0, a1, a2, a3, a4, a5, a6, a7);
+var dynCall_viiiffiii = Module['dynCall_viiiffiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_viiiffiii = Module['dynCall_viiiffiii'] = wasmExports['dynCall_viiiffiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+var dynCall_viiiiiiiiii = Module['dynCall_viiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) => (dynCall_viiiiiiiiii = Module['dynCall_viiiiiiiiii'] = wasmExports['dynCall_viiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+var dynCall_viiiiiiiiiiif = Module['dynCall_viiiiiiiiiiif'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12) => (dynCall_viiiiiiiiiiif = Module['dynCall_viiiiiiiiiiif'] = wasmExports['dynCall_viiiiiiiiiiif'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+var dynCall_viifi = Module['dynCall_viifi'] = (a0, a1, a2, a3, a4) => (dynCall_viifi = Module['dynCall_viifi'] = wasmExports['dynCall_viifi'])(a0, a1, a2, a3, a4);
+var dynCall_viiiiiiiiiiiiii = Module['dynCall_viiiiiiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14) => (dynCall_viiiiiiiiiiiiii = Module['dynCall_viiiiiiiiiiiiii'] = wasmExports['dynCall_viiiiiiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
+var dynCall_viiiiiiiiiii = Module['dynCall_viiiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11) => (dynCall_viiiiiiiiiii = Module['dynCall_viiiiiiiiiii'] = wasmExports['dynCall_viiiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
+var dynCall_viiiiiiiiiiii = Module['dynCall_viiiiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12) => (dynCall_viiiiiiiiiiii = Module['dynCall_viiiiiiiiiiii'] = wasmExports['dynCall_viiiiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12);
+var dynCall_viiiiifi = Module['dynCall_viiiiifi'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiiiifi = Module['dynCall_viiiiifi'] = wasmExports['dynCall_viiiiifi'])(a0, a1, a2, a3, a4, a5, a6, a7);
+var dynCall_fiifii = Module['dynCall_fiifii'] = (a0, a1, a2, a3, a4, a5) => (dynCall_fiifii = Module['dynCall_fiifii'] = wasmExports['dynCall_fiifii'])(a0, a1, a2, a3, a4, a5);
+var dynCall_fiiii = Module['dynCall_fiiii'] = (a0, a1, a2, a3, a4) => (dynCall_fiiii = Module['dynCall_fiiii'] = wasmExports['dynCall_fiiii'])(a0, a1, a2, a3, a4);
+var dynCall_iiiiiiiiiiiiiifii = Module['dynCall_iiiiiiiiiiiiiifii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16) => (dynCall_iiiiiiiiiiiiiifii = Module['dynCall_iiiiiiiiiiiiiifii'] = wasmExports['dynCall_iiiiiiiiiiiiiifii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16);
+var dynCall_viiiifiiiiiiifi = Module['dynCall_viiiifiiiiiiifi'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14) => (dynCall_viiiifiiiiiiifi = Module['dynCall_viiiifiiiiiiifi'] = wasmExports['dynCall_viiiifiiiiiiifi'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14);
+var dynCall_iiiiiiiiiiiiii = Module['dynCall_iiiiiiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13) => (dynCall_iiiiiiiiiiiiii = Module['dynCall_iiiiiiiiiiiiii'] = wasmExports['dynCall_iiiiiiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+var dynCall_viiiiiiiiiiiiiiii = Module['dynCall_viiiiiiiiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16) => (dynCall_viiiiiiiiiiiiiiii = Module['dynCall_viiiiiiiiiiiiiiii'] = wasmExports['dynCall_viiiiiiiiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16);
+var dynCall_viiiiiiiiiiiii = Module['dynCall_viiiiiiiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13) => (dynCall_viiiiiiiiiiiii = Module['dynCall_viiiiiiiiiiiii'] = wasmExports['dynCall_viiiiiiiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+var dynCall_viiijj = Module['dynCall_viiijj'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_viiijj = Module['dynCall_viiijj'] = wasmExports['dynCall_viiijj'])(a0, a1, a2, a3, a4, a5, a6, a7);
+var dynCall_iiiiiiidiiddii = Module['dynCall_iiiiiiidiiddii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13) => (dynCall_iiiiiiidiiddii = Module['dynCall_iiiiiiidiiddii'] = wasmExports['dynCall_iiiiiiidiiddii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+var dynCall_jij = Module['dynCall_jij'] = (a0, a1, a2, a3) => (dynCall_jij = Module['dynCall_jij'] = wasmExports['dynCall_jij'])(a0, a1, a2, a3);
+var dynCall_jii = Module['dynCall_jii'] = (a0, a1, a2) => (dynCall_jii = Module['dynCall_jii'] = wasmExports['dynCall_jii'])(a0, a1, a2);
+var dynCall_viiiij = Module['dynCall_viiiij'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viiiij = Module['dynCall_viiiij'] = wasmExports['dynCall_viiiij'])(a0, a1, a2, a3, a4, a5, a6);
+var dynCall_viiij = Module['dynCall_viiij'] = (a0, a1, a2, a3, a4, a5) => (dynCall_viiij = Module['dynCall_viiij'] = wasmExports['dynCall_viiij'])(a0, a1, a2, a3, a4, a5);
+var dynCall_dd = Module['dynCall_dd'] = (a0, a1) => (dynCall_dd = Module['dynCall_dd'] = wasmExports['dynCall_dd'])(a0, a1);
+var dynCall_viidi = Module['dynCall_viidi'] = (a0, a1, a2, a3, a4) => (dynCall_viidi = Module['dynCall_viidi'] = wasmExports['dynCall_viidi'])(a0, a1, a2, a3, a4);
+var dynCall_iiijiiii = Module['dynCall_iiijiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_iiijiiii = Module['dynCall_iiijiiii'] = wasmExports['dynCall_iiijiiii'])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 var dynCall_vij = Module['dynCall_vij'] = (a0, a1, a2, a3) => (dynCall_vij = Module['dynCall_vij'] = wasmExports['dynCall_vij'])(a0, a1, a2, a3);
 var dynCall_vid = Module['dynCall_vid'] = (a0, a1, a2) => (dynCall_vid = Module['dynCall_vid'] = wasmExports['dynCall_vid'])(a0, a1, a2);
 var dynCall_viji = Module['dynCall_viji'] = (a0, a1, a2, a3, a4) => (dynCall_viji = Module['dynCall_viji'] = wasmExports['dynCall_viji'])(a0, a1, a2, a3, a4);
-var dynCall_jiji = Module['dynCall_jiji'] = (a0, a1, a2, a3, a4) => (dynCall_jiji = Module['dynCall_jiji'] = wasmExports['dynCall_jiji'])(a0, a1, a2, a3, a4);
 var dynCall_iidiiii = Module['dynCall_iidiiii'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iidiiii = Module['dynCall_iidiiii'] = wasmExports['dynCall_iidiiii'])(a0, a1, a2, a3, a4, a5, a6);
 var dynCall_viijii = Module['dynCall_viijii'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_viijii = Module['dynCall_viijii'] = wasmExports['dynCall_viijii'])(a0, a1, a2, a3, a4, a5, a6);
-var dynCall_iiiiij = Module['dynCall_iiiiij'] = (a0, a1, a2, a3, a4, a5, a6) => (dynCall_iiiiij = Module['dynCall_iiiiij'] = wasmExports['dynCall_iiiiij'])(a0, a1, a2, a3, a4, a5, a6);
 var dynCall_iiiiid = Module['dynCall_iiiiid'] = (a0, a1, a2, a3, a4, a5) => (dynCall_iiiiid = Module['dynCall_iiiiid'] = wasmExports['dynCall_iiiiid'])(a0, a1, a2, a3, a4, a5);
 var dynCall_iiiiijj = Module['dynCall_iiiiijj'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8) => (dynCall_iiiiijj = Module['dynCall_iiiiijj'] = wasmExports['dynCall_iiiiijj'])(a0, a1, a2, a3, a4, a5, a6, a7, a8);
-var dynCall_iiiiiiii = Module['dynCall_iiiiiiii'] = (a0, a1, a2, a3, a4, a5, a6, a7) => (dynCall_iiiiiiii = Module['dynCall_iiiiiiii'] = wasmExports['dynCall_iiiiiiii'])(a0, a1, a2, a3, a4, a5, a6, a7);
 var dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9) => (dynCall_iiiiiijj = Module['dynCall_iiiiiijj'] = wasmExports['dynCall_iiiiiijj'])(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
 var _asyncify_start_unwind = (a0) => (_asyncify_start_unwind = wasmExports['asyncify_start_unwind'])(a0);
 var _asyncify_stop_unwind = () => (_asyncify_stop_unwind = wasmExports['asyncify_stop_unwind'])();
 var _asyncify_start_rewind = (a0) => (_asyncify_start_rewind = wasmExports['asyncify_start_rewind'])(a0);
 var _asyncify_stop_rewind = () => (_asyncify_stop_rewind = wasmExports['asyncify_stop_rewind'])();
-var _ff_h264_cabac_tables = Module['_ff_h264_cabac_tables'] = 208784;
+var _ff_h264_cabac_tables = Module['_ff_h264_cabac_tables'] = 1437804;
+function invoke_iiii(index,a1,a2,a3) {
+  var sp = stackSave();
+  try {
+    return dynCall_iiii(index,a1,a2,a3);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_ii(index,a1) {
+  var sp = stackSave();
+  try {
+    return dynCall_ii(index,a1);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iiiii(index,a1,a2,a3,a4) {
+  var sp = stackSave();
+  try {
+    return dynCall_iiiii(index,a1,a2,a3,a4);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viii(index,a1,a2,a3) {
+  var sp = stackSave();
+  try {
+    dynCall_viii(index,a1,a2,a3);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_vii(index,a1,a2) {
+  var sp = stackSave();
+  try {
+    dynCall_vii(index,a1,a2);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iii(index,a1,a2) {
+  var sp = stackSave();
+  try {
+    return dynCall_iii(index,a1,a2);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_vi(index,a1) {
+  var sp = stackSave();
+  try {
+    dynCall_vi(index,a1);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8,a9) {
+  var sp = stackSave();
+  try {
+    dynCall_viiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8,a9);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_viiii(index,a1,a2,a3,a4) {
+  var sp = stackSave();
+  try {
+    dynCall_viiii(index,a1,a2,a3,a4);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iiiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8,a9) {
+  var sp = stackSave();
+  try {
+    return dynCall_iiiiiiiiii(index,a1,a2,a3,a4,a5,a6,a7,a8,a9);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_iiiiiii(index,a1,a2,a3,a4,a5,a6) {
+  var sp = stackSave();
+  try {
+    return dynCall_iiiiiii(index,a1,a2,a3,a4,a5,a6);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
+function invoke_v(index) {
+  var sp = stackSave();
+  try {
+    dynCall_v(index);
+  } catch(e) {
+    stackRestore(sp);
+    if (e !== e+0) throw e;
+    _setThrew(1, 0);
+  }
+}
+
 
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
